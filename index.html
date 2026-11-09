@@ -426,13 +426,13 @@ html.play .hud,html.play .labels{top:env(safe-area-inset-top,0px);bottom:env(saf
 <script src="three.min.js"></script>
 <script>
 let LANG='ar';try{LANG=localStorage.getItem('hisn-lang')||((navigator.language||'ar').toLowerCase().startsWith('ar')?'ar':'en');}catch(_){}
-const EN=LANG==='en';const L=(a,e)=>EN?e:a;
+const EN=LANG==='en';const TX=(a,e)=>EN?e:a;
 
 (function(){
 'use strict';
 const $=s=>document.querySelector(s);
 const stage=$('#stage'),overlay=$('#overlay'),labels=$('#labels'),sheet=$('#sheet');
-if(!window.THREE){overlay.hidden=false;overlay.innerHTML=L('<div class="panel center"><h2>تعذّر تحميل اللعبة</h2><p>تحقق من الاتصال ثم أعد فتح الصفحة.</p></div>','<div class="panel center"><h2>The game could not load</h2><p>Check your connection, then reopen the page.</p></div>');return;}
+if(!window.THREE){overlay.hidden=false;overlay.innerHTML=TX('<div class="panel center"><h2>تعذّر تحميل اللعبة</h2><p>تحقق من الاتصال ثم أعد فتح الصفحة.</p></div>','<div class="panel center"><h2>The game could not load</h2><p>Check your connection, then reopen the page.</p></div>');return;}
 const STATIC_EN={'هجوم':'Attack','الجيش':'Army','الحصار':'Siege','البناء':'Build','المهام':'Quests','الأسلحة':'Weapons','البوابة':'Gate','القتلى':'Kills','الغنائم':'Loot','وابل السهام':'Arrow volley','مساحة واسعة':'Wide area','الزيت المغلي':'Boiling oil','عند البوابة':'At the gate','غضب القائد':'Commander rage','ابدأ الليل':'Start the night','انسحب':'Retreat','الدمار':'Destroyed','غنائم':'Loot','إنهاء المعركة':'End battle','الصوت: يعمل':'Sound: on','الإعدادات':'Settings','الذهب':'Gold','التمر':'Dates','اللؤلؤ':'Pearls'};
 if(EN){document.documentElement.lang='en';document.documentElement.dir='ltr';document.title='Sand Fort';document.querySelectorAll('[dir="rtl"]').forEach(e=>e.setAttribute('dir','ltr'));
   const st=document.getElementById('stage');if(st){const w=document.createTreeWalker(st,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const t=n.nodeValue.trim();if(STATIC_EN[t])n.nodeValue=n.nodeValue.replace(t,STATIC_EN[t]);}
@@ -440,11 +440,11 @@ if(EN){document.documentElement.lang='en';document.documentElement.dir='ltr';doc
 {const bl=document.getElementById('bLang');if(bl)bl.textContent=EN?'ع':'EN';}
 const AR=n=>EN?String(n):String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const N=n=>AR(Math.floor(Math.max(0,n)));
-const D1=n=>AR((Math.round(n*10)/10).toString()).replace('.',L('٫','.'));
+const D1=n=>AR((Math.round(n*10)/10).toString()).replace('.',TX('٫','.'));
 const rand=(a,b)=>a+Math.random()*(b-a);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function fmtT(s){s=Math.max(0,Math.ceil(s));const m=Math.floor(s/60),x=s%60;return m?AR(m)+L('د','m')+(x?' '+AR(x)+L('ث','s'):''):AR(x)+L('ث','s');}
-const RN={gold:L('ذهب','gold'),dates:L('تمر','dates'),pearl:L('لؤلؤ','pearls')};
+function fmtT(s){s=Math.max(0,Math.ceil(s));const m=Math.floor(s/60),x=s%60;return m?AR(m)+TX('د','m')+(x?' '+AR(x)+TX('ث','s'):''):AR(x)+TX('ث','s');}
+const RN={gold:TX('ذهب','gold'),dates:TX('تمر','dates'),pearl:TX('لؤلؤ','pearls')};
 const price=(n,r)=>N(n)+' '+RN[r];
 function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 
@@ -453,70 +453,70 @@ const LV_T=[0,5,20,45,90,180],LV_C=[0,1,2.5,6,14,30];
 const HALL_C=[0,0,1000,3000,7000,15000,30000],HALL_T=[0,0,30,60,120,240,400],HALL_MAX=6;
 const RATE=[0,.8,1.4,2.2,3.2,4.5],PCAP=[0,250,500,900,1500,2500],SCAP=[0,1500,3000,6000,12000,25000],CAMPCAP=[0,20,30,40,55,70];
 const B={
-  archer:{n:L('برج الرماة','Archer Tower'),pay:'gold',base:250,kind:'def',cnt:[0,2,2,3,3,4,4],d:L('يطلق السهام بسرعة على هدف واحد.','Fires arrows fast at one target.')},
-  cat:{n:L('المنجنيق','Catapult'),pay:'gold',base:600,kind:'def',cnt:[0,0,1,1,1,2,2],d:L('مدى بعيد، يسحق المجموعات بالحجارة.','Long range, crushes groups with stones.')},
-  fire:{n:L('برج النار','Fire Tower'),pay:'gold',base:500,kind:'def',cnt:[0,0,0,1,1,1,2],d:L('يحرق كل من يقترب منه.','Burns everyone who comes close.')},
-  sand:{n:L('الرمال المتحركة','Quicksand Trap'),pay:'gold',base:300,kind:'def',cnt:[0,0,1,1,2,2,3],d:L('فخ يبتلع أقدام الغزاة: يبطئهم كثيراً ويجرحهم، ويعود للعمل بعد قليل.','A trap that grabs the invaders\' feet: slows them hard and hurts them, then re-arms.')},
-  ballista:{n:L('المِرماة','Ballista'),pay:'gold',base:900,kind:'def',cnt:[0,0,0,1,1,1,2],d:L('سهم ضخم يخترق كل من في طريقه، ولا تصدّه الدروع.','A giant bolt that pierces everyone in a line. Shields do not stop it.')},
-  barjeel:{n:L('البرجيل','Wind Tower'),pay:'gold',base:800,kind:'def',cnt:[0,0,0,0,1,1,1],d:L('برج الريح الخليجي: عصفة تدفع الغزاة إلى الخلف وتبطئهم.','The Gulf wind tower: a gust that pushes invaders back and slows them.')},
-  falcon:{n:L('مجثم الصقر','Falcon Perch'),pay:'gold',base:1100,kind:'def',cnt:[0,0,0,0,1,1,1],d:L('صقر يطير لأبعد مدى وينقضّ على أقوى عدو.','A falcon that flies the farthest and dives on the strongest enemy.')},
-  mirror:{n:L('منارة الشمس','Sun Mirror'),pay:'gold',base:1500,kind:'def',cnt:[0,0,0,0,0,1,1],d:L('مرآة تركّز الشمس على هدف واحد، وحرارتها تتضاعف كلما بقيت عليه.','A mirror that focuses the sun on one target. The longer it holds, the hotter it gets.')},
-  mine:{n:L('منجم الذهب','Gold Mine'),pay:'dates',base:150,kind:'prod',prod:'gold',cnt:[0,1,2,2,3,3,3],d:L('ينتج الذهب باستمرار، حتى وأنت خارج اللعبة.','Produces gold nonstop, even while you are away.')},
-  farm:{n:L('مزرعة النخيل','Palm Farm'),pay:'gold',base:150,kind:'prod',prod:'dates',cnt:[0,1,2,2,3,3,3],d:L('تنتج التمر الذي يغذّي الجيش والأبحاث.','Grows the dates that feed your army and research.')},
-  gstore:{n:L('خزنة الذهب','Gold Vault'),pay:'dates',base:300,kind:'store',store:'gold',cnt:[0,1,1,1,2,2,2],d:L('ترفع أقصى كمية ذهب تحتفظ بها.','Raises how much gold you can keep.')},
-  dstore:{n:L('مخزن التمر','Date Store'),pay:'gold',base:300,kind:'store',store:'dates',cnt:[0,1,1,1,2,2,2],d:L('يرفع أقصى كمية تمر تحتفظ بها.','Raises how many dates you can keep.')},
-  barracks:{n:L('الثكنة','Barracks'),pay:'dates',base:200,kind:'army',cnt:[0,1,1,1,1,1,1],d:L('كل مستوى يفتح نوعاً جديداً من الجنود.','Each level unlocks a new troop type.')},
-  camp:{n:L('معسكر الجيش','Army Camp'),pay:'dates',base:250,kind:'army',cnt:[0,1,1,1,2,2,2],d:L('يحدد عدد الجنود الذين تأخذهم إلى الغارة.','Sets how many troops you take on a raid.')},
-  smithy:{n:L('الحدّاد','Blacksmith'),pay:'dates',base:500,kind:'army',cnt:[0,0,0,1,1,1,1],d:L('يطوّر أسلحة الجنود ودروعهم.','Upgrades your troops\' weapons and armor.')}};
+  archer:{n:TX('برج الرماة','Archer Tower'),pay:'gold',base:250,kind:'def',cnt:[0,2,2,3,3,4,4],d:TX('يطلق السهام بسرعة على هدف واحد.','Fires arrows fast at one target.')},
+  cat:{n:TX('المنجنيق','Catapult'),pay:'gold',base:600,kind:'def',cnt:[0,0,1,1,1,2,2],d:TX('مدى بعيد، يسحق المجموعات بالحجارة.','Long range, crushes groups with stones.')},
+  fire:{n:TX('برج النار','Fire Tower'),pay:'gold',base:500,kind:'def',cnt:[0,0,0,1,1,1,2],d:TX('يحرق كل من يقترب منه.','Burns everyone who comes close.')},
+  sand:{n:TX('الرمال المتحركة','Quicksand Trap'),pay:'gold',base:300,kind:'def',cnt:[0,0,1,1,2,2,3],d:TX('فخ يبتلع أقدام الغزاة: يبطئهم كثيراً ويجرحهم، ويعود للعمل بعد قليل.','A trap that grabs the invaders\' feet: slows them hard and hurts them, then re-arms.')},
+  ballista:{n:TX('المِرماة','Ballista'),pay:'gold',base:900,kind:'def',cnt:[0,0,0,1,1,1,2],d:TX('سهم ضخم يخترق كل من في طريقه، ولا تصدّه الدروع.','A giant bolt that pierces everyone in a line. Shields do not stop it.')},
+  barjeel:{n:TX('البرجيل','Wind Tower'),pay:'gold',base:800,kind:'def',cnt:[0,0,0,0,1,1,1],d:TX('برج الريح الخليجي: عصفة تدفع الغزاة إلى الخلف وتبطئهم.','The Gulf wind tower: a gust that pushes invaders back and slows them.')},
+  falcon:{n:TX('مجثم الصقر','Falcon Perch'),pay:'gold',base:1100,kind:'def',cnt:[0,0,0,0,1,1,1],d:TX('صقر يطير لأبعد مدى وينقضّ على أقوى عدو.','A falcon that flies the farthest and dives on the strongest enemy.')},
+  mirror:{n:TX('منارة الشمس','Sun Mirror'),pay:'gold',base:1500,kind:'def',cnt:[0,0,0,0,0,1,1],d:TX('مرآة تركّز الشمس على هدف واحد، وحرارتها تتضاعف كلما بقيت عليه.','A mirror that focuses the sun on one target. The longer it holds, the hotter it gets.')},
+  mine:{n:TX('منجم الذهب','Gold Mine'),pay:'dates',base:150,kind:'prod',prod:'gold',cnt:[0,1,2,2,3,3,3],d:TX('ينتج الذهب باستمرار، حتى وأنت خارج اللعبة.','Produces gold nonstop, even while you are away.')},
+  farm:{n:TX('مزرعة النخيل','Palm Farm'),pay:'gold',base:150,kind:'prod',prod:'dates',cnt:[0,1,2,2,3,3,3],d:TX('تنتج التمر الذي يغذّي الجيش والأبحاث.','Grows the dates that feed your army and research.')},
+  gstore:{n:TX('خزنة الذهب','Gold Vault'),pay:'dates',base:300,kind:'store',store:'gold',cnt:[0,1,1,1,2,2,2],d:TX('ترفع أقصى كمية ذهب تحتفظ بها.','Raises how much gold you can keep.')},
+  dstore:{n:TX('مخزن التمر','Date Store'),pay:'gold',base:300,kind:'store',store:'dates',cnt:[0,1,1,1,2,2,2],d:TX('يرفع أقصى كمية تمر تحتفظ بها.','Raises how many dates you can keep.')},
+  barracks:{n:TX('الثكنة','Barracks'),pay:'dates',base:200,kind:'army',cnt:[0,1,1,1,1,1,1],d:TX('كل مستوى يفتح نوعاً جديداً من الجنود.','Each level unlocks a new troop type.')},
+  camp:{n:TX('معسكر الجيش','Army Camp'),pay:'dates',base:250,kind:'army',cnt:[0,1,1,1,2,2,2],d:TX('يحدد عدد الجنود الذين تأخذهم إلى الغارة.','Sets how many troops you take on a raid.')},
+  smithy:{n:TX('الحدّاد','Blacksmith'),pay:'dates',base:500,kind:'army',cnt:[0,0,0,1,1,1,1],d:TX('يطوّر أسلحة الجنود ودروعهم.','Upgrades your troops\' weapons and armor.')}};
 const BORDER=['archer','cat','fire','sand','ballista','barjeel','falcon','mirror','mine','farm','gstore','dstore','barracks','camp','smithy'];
 const TR={
-  sword:{n:L('مبارز','Swordsman'),hs:1,hp:70,dps:14,range:.9,speed:3.2,tgt:'any',bar:1,d:L('صلب ورخيص، يهاجم أقرب مبنى.','Tough and cheap, attacks the nearest building.')},
-  archer:{n:L('رامٍ','Archer'),hs:1,hp:35,dps:11,range:5.5,speed:3.2,tgt:'any',bar:2,d:L('يضرب من بعيد، احمه بالمبارزين.','Hits from afar. Protect them with swordsmen.')},
-  rider:{n:L('خيّال','Rider'),hs:2,hp:90,dps:18,range:1,speed:5.5,tgt:'res',bar:3,d:L('سريع، يستهدف المخازن أولاً.','Fast, goes for storages first.')},
-  heavy:{n:L('حامل الدرع','Shield Bearer'),hs:5,hp:520,dps:16,range:1,speed:2.2,tgt:'def',bar:4,d:L('يمتص الضربات ويستهدف الدفاعات فقط.','Soaks up hits and targets only defenses.')},
-  ram:{n:L('كبش الاقتحام','Battering Ram'),hs:8,hp:900,dps:70,range:1.4,speed:1.5,tgt:'hall',bar:5,d:L('يتجه مباشرة إلى خيمة الزعيم.','Heads straight for the chief\'s tent.')}};
+  sword:{n:TX('مبارز','Swordsman'),hs:1,hp:70,dps:14,range:.9,speed:3.2,tgt:'any',bar:1,d:TX('صلب ورخيص، يهاجم أقرب مبنى.','Tough and cheap, attacks the nearest building.')},
+  archer:{n:TX('رامٍ','Archer'),hs:1,hp:35,dps:11,range:5.5,speed:3.2,tgt:'any',bar:2,d:TX('يضرب من بعيد، احمه بالمبارزين.','Hits from afar. Protect them with swordsmen.')},
+  rider:{n:TX('خيّال','Rider'),hs:2,hp:90,dps:18,range:1,speed:5.5,tgt:'res',bar:3,d:TX('سريع، يستهدف المخازن أولاً.','Fast, goes for storages first.')},
+  heavy:{n:TX('حامل الدرع','Shield Bearer'),hs:5,hp:520,dps:16,range:1,speed:2.2,tgt:'def',bar:4,d:TX('يمتص الضربات ويستهدف الدفاعات فقط.','Soaks up hits and targets only defenses.')},
+  ram:{n:TX('كبش الاقتحام','Battering Ram'),hs:8,hp:900,dps:70,range:1.4,speed:1.5,tgt:'hall',bar:5,d:TX('يتجه مباشرة إلى خيمة الزعيم.','Heads straight for the chief\'s tent.')}};
 const TORDER=['sword','archer','rider','heavy','ram'];
 const WPN=[
-  {id:'hunt',n:L('قوس الصيد','Hunting Bow'),kills:0,dmg:2,cd:.3,d:L('سهم واحد سريع','One fast arrow')},
-  {id:'comp',n:L('القوس المركّب','Composite Bow'),kills:60,dmg:3,cd:.24,d:L('ضرر أعلى وسرعة أكبر','More damage, faster')},
-  {id:'falcon',n:L('قوس الصقر','Falcon Bow'),kills:200,dmg:2.5,cd:.3,multi:3,d:L('ثلاثة سهام في كل رمية','Three arrows per shot')},
-  {id:'fire',n:L('القوس الناري','Fire Bow'),kills:450,dmg:3,cd:.3,burn:2.5,splash:2,fire:true,d:L('يحرق الهدف ومن حوله ويخترق الدروع','Burns the target and those around it, pierces armor')},
-  {id:'thunder',n:L('قوس الرعد','Thunder Bow'),kills:900,dmg:5,cd:.28,chain:2,fire:true,d:L('السهم يقفز إلى عدوين آخرين','The arrow jumps to two more enemies')}];
-const LEAGUES=[[0,L('دوري الرمل','Sand League')],[150,L('دوري النحاس','Copper League')],[400,L('دوري الفضة','Silver League')],[800,L('دوري الذهب','Gold League')],[1300,L('دوري الياقوت','Ruby League')]];
-const CAMPS=[L('واحة العطش','Thirst Oasis'),L('بئر الحداة','Hudat Well'),L('كثبان السراب','Mirage Dunes'),L('وادي الصخر','Rock Valley'),L('قلعة الملح','Salt Castle'),L('معسكر الريح','Wind Camp'),L('ممر الأفاعي','Viper Pass'),L('حصن الغبار','Dust Fort'),L('سوق القوافل','Caravan Market'),L('جرف النسور','Eagle Cliff'),L('مرفأ القراصنة','Pirate Harbor'),L('واحة الذئاب','Wolf Oasis'),L('قلعة العقرب','Scorpion Castle'),L('ميناء العنبر','Amber Port'),L('جبل الرماد','Ash Mountain'),L('مدينة النحاس','Copper City'),L('عرش الرمال','Sand Throne'),L('عرين الزعيم','The Chief\'s Lair')];
+  {id:'hunt',n:TX('قوس الصيد','Hunting Bow'),kills:0,dmg:2,cd:.3,d:TX('سهم واحد سريع','One fast arrow')},
+  {id:'comp',n:TX('القوس المركّب','Composite Bow'),kills:60,dmg:3,cd:.24,d:TX('ضرر أعلى وسرعة أكبر','More damage, faster')},
+  {id:'falcon',n:TX('قوس الصقر','Falcon Bow'),kills:200,dmg:2.5,cd:.3,multi:3,d:TX('ثلاثة سهام في كل رمية','Three arrows per shot')},
+  {id:'fire',n:TX('القوس الناري','Fire Bow'),kills:450,dmg:3,cd:.3,burn:2.5,splash:2,fire:true,d:TX('يحرق الهدف ومن حوله ويخترق الدروع','Burns the target and those around it, pierces armor')},
+  {id:'thunder',n:TX('قوس الرعد','Thunder Bow'),kills:900,dmg:5,cd:.28,chain:2,fire:true,d:TX('السهم يقفز إلى عدوين آخرين','The arrow jumps to two more enemies')}];
+const LEAGUES=[[0,TX('دوري الرمل','Sand League')],[150,TX('دوري النحاس','Copper League')],[400,TX('دوري الفضة','Silver League')],[800,TX('دوري الذهب','Gold League')],[1300,TX('دوري الياقوت','Ruby League')]];
+const CAMPS=[TX('واحة العطش','Thirst Oasis'),TX('بئر الحداة','Hudat Well'),TX('كثبان السراب','Mirage Dunes'),TX('وادي الصخر','Rock Valley'),TX('قلعة الملح','Salt Castle'),TX('معسكر الريح','Wind Camp'),TX('ممر الأفاعي','Viper Pass'),TX('حصن الغبار','Dust Fort'),TX('سوق القوافل','Caravan Market'),TX('جرف النسور','Eagle Cliff'),TX('مرفأ القراصنة','Pirate Harbor'),TX('واحة الذئاب','Wolf Oasis'),TX('قلعة العقرب','Scorpion Castle'),TX('ميناء العنبر','Amber Port'),TX('جبل الرماد','Ash Mountain'),TX('مدينة النحاس','Copper City'),TX('عرش الرمال','Sand Throne'),TX('عرين الزعيم','The Chief\'s Lair')];
 const campLoot=i=>{const g=Math.round(220*Math.pow(i+1,1.35)/10)*10;return{gold:g,dates:Math.round(g*.9/10)*10};};
 const TASKS=[
-  {id:'c1',n:L('اجمع ٢٠٠٠ من المناجم والمزارع','Collect 2000 from mines and farms'),goal:2000,v:()=>S.st.collected,r:30},
-  {id:'b1',n:L('ابنِ أو طوّر ٨ مبانٍ','Build or upgrade 8 buildings'),goal:8,v:()=>S.st.built,r:30},
-  {id:'t60',n:L('درّب ٦٠ جندياً','Train 60 troops'),goal:60,v:()=>S.st.trained,r:25},
-  {id:'h3',n:L('طوّر القاعة الكبرى إلى المستوى ٣','Upgrade the Great Hall to level 3'),goal:3,v:()=>S.hall.l,r:60},
-  {id:'s6',n:L('اجمع ٦ نجوم في حملة الغزاة','Earn 6 stars in the invader campaign'),goal:6,v:()=>campStars(),r:40},
-  {id:'r5',n:L('انتصر في ٥ غارات','Win 5 raids'),goal:5,v:()=>S.st.raidsWon,r:40},
-  {id:'k150',n:L('أسقط ١٥٠ غازياً في الحصار','Defeat 150 invaders in the siege'),goal:150,v:()=>S.kills,r:40},
-  {id:'n8',n:L('اصمد ٨ ليالٍ في حصار واحد','Survive 8 nights in one siege'),goal:8,v:()=>S.best,r:60},
-  {id:'tr400',n:L('ابلغ ٤٠٠ كأس','Reach 400 trophies'),goal:400,v:()=>S.trophies,r:80}];
+  {id:'c1',n:TX('اجمع ٢٠٠٠ من المناجم والمزارع','Collect 2000 from mines and farms'),goal:2000,v:()=>S.st.collected,r:30},
+  {id:'b1',n:TX('ابنِ أو طوّر ٨ مبانٍ','Build or upgrade 8 buildings'),goal:8,v:()=>S.st.built,r:30},
+  {id:'t60',n:TX('درّب ٦٠ جندياً','Train 60 troops'),goal:60,v:()=>S.st.trained,r:25},
+  {id:'h3',n:TX('طوّر القاعة الكبرى إلى المستوى ٣','Upgrade the Great Hall to level 3'),goal:3,v:()=>S.hall.l,r:60},
+  {id:'s6',n:TX('اجمع ٦ نجوم في حملة الغزاة','Earn 6 stars in the invader campaign'),goal:6,v:()=>campStars(),r:40},
+  {id:'r5',n:TX('انتصر في ٥ غارات','Win 5 raids'),goal:5,v:()=>S.st.raidsWon,r:40},
+  {id:'k150',n:TX('أسقط ١٥٠ غازياً في الحصار','Defeat 150 invaders in the siege'),goal:150,v:()=>S.kills,r:40},
+  {id:'n8',n:TX('اصمد ٨ ليالٍ في حصار واحد','Survive 8 nights in one siege'),goal:8,v:()=>S.best,r:60},
+  {id:'tr400',n:TX('ابلغ ٤٠٠ كأس','Reach 400 trophies'),goal:400,v:()=>S.trophies,r:80}];
 const PLOTS=[[-6,6],[6,6],[-12,3],[12,3],[-4,13],[4,13],[-14,11],[14,11],
   [-14,-3],[-14,-9],[-14,-15],[-20,-6],[-20,-12],[14,-3],[14,-9],[14,-15],[20,-6],[20,-12],
   [-7,-20],[0,-20],[7,-20],[-14,-21],[14,-21],
   [-10,19],[10,19],[0,21],[-20,1],[20,1],[-21,-18],[21,-18],[0,-27]];
 const NPL=PLOTS.length;
 const WALL_C=[0,0,500,1500,4000,10000],WALLC=[0,0xc8a676,0xd6bc8e,0xb4ae9e,0x9ea6b4,0xe2c46a];
-const RAIDERS=[L('الذيب الأسود','Black Wolf'),L('صقر الرمال','Sand Falcon'),L('عقرب الوادي','Valley Scorpion'),L('نمر الكثبان','Dune Leopard'),L('غراب الليل','Night Raven'),L('ثعلب الصحراء','Desert Fox'),L('سيف البادية','Badia Sword'),L('رعد الصحراء','Desert Thunder')];
-const DQ=[{id:'w2',n:L('انتصر في غارتين','Win 2 raids'),goal:2,k:'raidsWon'},{id:'n3',n:L('اصمد ٣ ليالٍ في الحصار','Survive 3 nights in the siege'),goal:3,k:'nights'},{id:'c15',n:L('اجمع ١٥٠٠ من المناجم والمزارع','Collect 1500 from mines and farms'),goal:1500,k:'collected'},{id:'t30',n:L('درّب ٣٠ جندياً','Train 30 troops'),goal:30,k:'trained'}];
-const SEASON=[{p:50,r:{gold:400},n:L('٤٠٠ ذهب','400 gold')},{p:120,r:{dates:500},n:L('٥٠٠ تمر','500 dates')},{p:200,r:{pearl:20},n:L('٢٠ لؤلؤ','20 pearls')},{p:300,r:{gold:1200},n:L('١٢٠٠ ذهب','1200 gold')},{p:420,r:{cos:'banner'},n:L('راية زرقاء للقلعة','Blue banner for the keep')},{p:560,r:{dates:2000},n:L('٢٠٠٠ تمر','2000 dates')},{p:720,r:{pearl:40},n:L('٤٠ لؤلؤ','40 pearls')},{p:900,r:{gold:4000},n:L('٤٠٠٠ ذهب','4000 gold')},{p:1100,r:{pearl:60},n:L('٦٠ لؤلؤ','60 pearls')},{p:1350,r:{cos:'gate'},n:L('بوابة ذهبية للحصن','Golden gate for the fort')}];
+const RAIDERS=[TX('الذيب الأسود','Black Wolf'),TX('صقر الرمال','Sand Falcon'),TX('عقرب الوادي','Valley Scorpion'),TX('نمر الكثبان','Dune Leopard'),TX('غراب الليل','Night Raven'),TX('ثعلب الصحراء','Desert Fox'),TX('سيف البادية','Badia Sword'),TX('رعد الصحراء','Desert Thunder')];
+const DQ=[{id:'w2',n:TX('انتصر في غارتين','Win 2 raids'),goal:2,k:'raidsWon'},{id:'n3',n:TX('اصمد ٣ ليالٍ في الحصار','Survive 3 nights in the siege'),goal:3,k:'nights'},{id:'c15',n:TX('اجمع ١٥٠٠ من المناجم والمزارع','Collect 1500 from mines and farms'),goal:1500,k:'collected'},{id:'t30',n:TX('درّب ٣٠ جندياً','Train 30 troops'),goal:30,k:'trained'}];
+const SEASON=[{p:50,r:{gold:400},n:TX('٤٠٠ ذهب','400 gold')},{p:120,r:{dates:500},n:TX('٥٠٠ تمر','500 dates')},{p:200,r:{pearl:20},n:TX('٢٠ لؤلؤ','20 pearls')},{p:300,r:{gold:1200},n:TX('١٢٠٠ ذهب','1200 gold')},{p:420,r:{cos:'banner'},n:TX('راية زرقاء للقلعة','Blue banner for the keep')},{p:560,r:{dates:2000},n:TX('٢٠٠٠ تمر','2000 dates')},{p:720,r:{pearl:40},n:TX('٤٠ لؤلؤ','40 pearls')},{p:900,r:{gold:4000},n:TX('٤٠٠٠ ذهب','4000 gold')},{p:1100,r:{pearl:60},n:TX('٦٠ لؤلؤ','60 pearls')},{p:1350,r:{cos:'gate'},n:TX('بوابة ذهبية للحصن','Golden gate for the fort')}];
 const GUIDE=[
-  {n:L('اجمع الذهب من المنجم','Collect gold from the mine'),d:L('اضغط الفقاعة الذهبية فوق المنجم','Tap the gold bubble above the mine'),v:()=>S.st.collected>0,r:{pearl:10}},
-  {n:L('ابنِ خزنة الذهب','Build a Gold Vault'),d:L('زر البناء، ثم خزنة الذهب، ثم حلقة فارغة','Build button, then Gold Vault, then an empty ring'),v:()=>lvlOf('gstore')>=1,r:{pearl:10,dates:200}},
-  {n:L('درّب ٥ جنود','Train 5 troops'),d:L('زر الجيش، ثم اضغط + بجانب المبارز','Army button, then tap + next to the Swordsman'),v:()=>S.st.trained>=5,r:{pearl:10}},
-  {n:L('اكسب نجمة في واحة العطش','Earn a star at Thirst Oasis'),d:L('زر الهجوم، ثم أول معسكر في الحملة','Attack button, then the first camp in the campaign'),v:()=>!!(S.camps[0]&&S.camps[0].stars>0),r:{pearl:15,gold:300}},
-  {n:L('اصمد ليلة في الحصار','Survive one night in the siege'),d:L('زر الحصار، ثم ابدأ الليل','Siege button, then Start the night'),v:()=>S.best>=1,r:{pearl:15}},
-  {n:L('طوّر القاعة الكبرى إلى المستوى ٢','Upgrade the Great Hall to level 2'),d:L('اضغط على القلعة في وسط الحصن','Tap the keep in the middle of the fort'),v:()=>S.hall.l>=2,r:{pearl:20}},
-  {n:L('ابنِ منجنيقاً أمام البوابة','Build a Catapult in front of the gate'),d:L('زر البناء، ثم المنجنيق، ثم حلقة أمامية','Build button, then Catapult, then a front ring'),v:()=>lvlOf('cat')>=1,r:{pearl:15}},
-  {n:L('طوّر الثكنة إلى المستوى ٢ لفتح الرماة','Upgrade the Barracks to level 2 to unlock Archers'),d:L('اضغط على الثكنة خلف الحصن','Tap the Barracks behind the fort'),v:()=>lvlOf('barracks')>=2,r:{pearl:15}},
-  {n:L('اكسب ٣ نجوم في أي معسكر','Earn 3 stars in any camp'),d:L('اجمع المبارزين والرماة، واستخدم وابل السهام','Bring swordsmen and archers, and use the Arrow Volley'),v:()=>Object.values(S.camps).some(c=>c.stars>=3),r:{pearl:20}},
-  {n:L('ارفع أسوار الحصن إلى المستوى ٢','Raise the fort walls to level 2'),d:L('اضغط على أي سور من أسوار الحصن','Tap any wall of the fort'),v:()=>S.wallL>=2,r:{pearl:20}},
-  {n:L('درّب القائد إلى المستوى ٢','Train the Commander to level 2'),d:L('زر الأسلحة، ثم درّب القائد','Weapons button, then train the Commander'),v:()=>S.heroL>=2,r:{pearl:20}},
-  {n:L('ابلغ دوري النحاس','Reach the Copper League'),d:L('١٥٠ كأساً من الغارات العشوائية والحملة','150 trophies from random raids and the campaign'),v:()=>S.trophies>=150,r:{pearl:30}}];
+  {n:TX('اجمع الذهب من المنجم','Collect gold from the mine'),d:TX('اضغط الفقاعة الذهبية فوق المنجم','Tap the gold bubble above the mine'),v:()=>S.st.collected>0,r:{pearl:10}},
+  {n:TX('ابنِ خزنة الذهب','Build a Gold Vault'),d:TX('زر البناء، ثم خزنة الذهب، ثم حلقة فارغة','Build button, then Gold Vault, then an empty ring'),v:()=>lvlOf('gstore')>=1,r:{pearl:10,dates:200}},
+  {n:TX('درّب ٥ جنود','Train 5 troops'),d:TX('زر الجيش، ثم اضغط + بجانب المبارز','Army button, then tap + next to the Swordsman'),v:()=>S.st.trained>=5,r:{pearl:10}},
+  {n:TX('اكسب نجمة في واحة العطش','Earn a star at Thirst Oasis'),d:TX('زر الهجوم، ثم أول معسكر في الحملة','Attack button, then the first camp in the campaign'),v:()=>!!(S.camps[0]&&S.camps[0].stars>0),r:{pearl:15,gold:300}},
+  {n:TX('اصمد ليلة في الحصار','Survive one night in the siege'),d:TX('زر الحصار، ثم ابدأ الليل','Siege button, then Start the night'),v:()=>S.best>=1,r:{pearl:15}},
+  {n:TX('طوّر القاعة الكبرى إلى المستوى ٢','Upgrade the Great Hall to level 2'),d:TX('اضغط على القلعة في وسط الحصن','Tap the keep in the middle of the fort'),v:()=>S.hall.l>=2,r:{pearl:20}},
+  {n:TX('ابنِ منجنيقاً أمام البوابة','Build a Catapult in front of the gate'),d:TX('زر البناء، ثم المنجنيق، ثم حلقة أمامية','Build button, then Catapult, then a front ring'),v:()=>lvlOf('cat')>=1,r:{pearl:15}},
+  {n:TX('طوّر الثكنة إلى المستوى ٢ لفتح الرماة','Upgrade the Barracks to level 2 to unlock Archers'),d:TX('اضغط على الثكنة خلف الحصن','Tap the Barracks behind the fort'),v:()=>lvlOf('barracks')>=2,r:{pearl:15}},
+  {n:TX('اكسب ٣ نجوم في أي معسكر','Earn 3 stars in any camp'),d:TX('اجمع المبارزين والرماة، واستخدم وابل السهام','Bring swordsmen and archers, and use the Arrow Volley'),v:()=>Object.values(S.camps).some(c=>c.stars>=3),r:{pearl:20}},
+  {n:TX('ارفع أسوار الحصن إلى المستوى ٢','Raise the fort walls to level 2'),d:TX('اضغط على أي سور من أسوار الحصن','Tap any wall of the fort'),v:()=>S.wallL>=2,r:{pearl:20}},
+  {n:TX('درّب القائد إلى المستوى ٢','Train the Commander to level 2'),d:TX('زر الأسلحة، ثم درّب القائد','Weapons button, then train the Commander'),v:()=>S.heroL>=2,r:{pearl:20}},
+  {n:TX('ابلغ دوري النحاس','Reach the Copper League'),d:TX('١٥٠ كأساً من الغارات العشوائية والحملة','150 trophies from random raids and the campaign'),v:()=>S.trophies>=150,r:{pearl:30}}];
 
 /* =================== save =================== */
 const KEY='hisn-save-v3';
@@ -801,44 +801,44 @@ function sfx(k){if(!AC||muted)return;const n=performance.now();if(lastS[k]&&n-la
 /* =================== economy =================== */
 function tickEco(now){
   S.plots.forEach((p,i)=>{if(!p)return;
-    if(p.end&&now>=p.end){p.l++;p.end=0;p.last=now;rebuildPlot(i);toast(L(`اكتمل: ${B[p.t].n} مستوى ${N(p.l)}`,`Done: ${B[p.t].n} level ${N(p.l)}`));sfx('done');addPts(6);burst({x:PL[i].x,y:1,z:PL[i].z},0xf2c14e,12);}
+    if(p.end&&now>=p.end){p.l++;p.end=0;p.last=now;rebuildPlot(i);toast(TX(`اكتمل: ${B[p.t].n} مستوى ${N(p.l)}`,`Done: ${B[p.t].n} level ${N(p.l)}`));sfx('done');addPts(6);burst({x:PL[i].x,y:1,z:PL[i].z},0xf2c14e,12);}
     if(B[p.t].kind==='prod'&&p.l>0){if(!p.end)p.stored=Math.min(PCAP[p.l],(p.stored||0)+RATE[p.l]/tm()*Math.max(0,now-(p.last||now))/1000);p.last=now;}});
-  if(S.hall.end&&now>=S.hall.end){S.hall.l++;S.hall.end=0;rebuildKeep();toast(L(`القاعة الكبرى وصلت إلى المستوى ${N(S.hall.l)}! مبانٍ جديدة متاحة`,`The Great Hall reached level ${N(S.hall.l)}! New buildings are available`));sfx('unlock');addPts(15);}
-  if(S.heroEnd&&now>=S.heroEnd){S.heroL++;S.heroEnd=0;toast(L(`القائد وصل إلى المستوى ${N(S.heroL)}`,`The Commander reached level ${N(S.heroL)}`));sfx('unlock');addPts(8);}
-  if(S.wallEnd&&now>=S.wallEnd){S.wallL++;S.wallEnd=0;applyWallLook();toast(L(`أسوار الحصن وصلت إلى المستوى ${N(S.wallL)}`,`The fort walls reached level ${N(S.wallL)}`));sfx('done');addPts(6);}
-  if(S.research&&now>=S.research.end){const t=S.research.t;S.tl[t]=(S.tl[t]||1)+1;S.research=null;toast(L(`الحدّاد أنهى: ${TR[t].n} مستوى ${N(S.tl[t])}`,`The Blacksmith finished: ${TR[t].n} level ${N(S.tl[t])}`));sfx('done');}
+  if(S.hall.end&&now>=S.hall.end){S.hall.l++;S.hall.end=0;rebuildKeep();toast(TX(`القاعة الكبرى وصلت إلى المستوى ${N(S.hall.l)}! مبانٍ جديدة متاحة`,`The Great Hall reached level ${N(S.hall.l)}! New buildings are available`));sfx('unlock');addPts(15);}
+  if(S.heroEnd&&now>=S.heroEnd){S.heroL++;S.heroEnd=0;toast(TX(`القائد وصل إلى المستوى ${N(S.heroL)}`,`The Commander reached level ${N(S.heroL)}`));sfx('unlock');addPts(8);}
+  if(S.wallEnd&&now>=S.wallEnd){S.wallL++;S.wallEnd=0;applyWallLook();toast(TX(`أسوار الحصن وصلت إلى المستوى ${N(S.wallL)}`,`The fort walls reached level ${N(S.wallL)}`));sfx('done');addPts(6);}
+  if(S.research&&now>=S.research.end){const t=S.research.t;S.tl[t]=(S.tl[t]||1)+1;S.research=null;toast(TX(`الحدّاد أنهى: ${TR[t].n} مستوى ${N(S.tl[t])}`,`The Blacksmith finished: ${TR[t].n} level ${N(S.tl[t])}`));sfx('done');}
   let guard=0;
   while(S.queue.length&&guard++<500){const t=S.queue[0];if(!S.qStart)S.qStart=now;const ready=S.qStart+trainT(t)*1000;if(now<ready)break;
     if(armyHs()+TR[t].hs>armyCap()){S.qStart=now;break;}
     S.queue.shift();S.army[t]=(S.army[t]||0)+1;S.st.trained++;S.qStart=S.queue.length?ready:0;}}
 function queueLeft(){if(!S.queue.length)return 0;const now=Date.now();let s=Math.max(0,(S.qStart+trainT(S.queue[0])*1000-now)/1000);for(let i=1;i<S.queue.length;i++)s+=trainT(S.queue[i]);return s;}
 function collect(i){const p=S.plots[i];if(!p||B[p.t].kind!=='prod')return 0;const r=B[p.t].prod;const amt=Math.floor(p.stored);if(amt<1)return 0;
-  const got=addRes(r,amt);if(got<=0){toast(r==='gold'?L('خزائن الذهب ممتلئة، ابنِ أو طوّر خزنة','Gold vaults are full. Build or upgrade a vault'):L('مخازن التمر ممتلئة، ابنِ أو طوّر مخزناً','Date stores are full. Build or upgrade a store'));return 0;}
+  const got=addRes(r,amt);if(got<=0){toast(r==='gold'?TX('خزائن الذهب ممتلئة، ابنِ أو طوّر خزنة','Gold vaults are full. Build or upgrade a vault'):TX('مخازن التمر ممتلئة، ابنِ أو طوّر مخزناً','Date stores are full. Build or upgrade a store'));return 0;}
   p.stored-=got;S.st.collected+=got;floatTxt({x:PL[i].x,y:1,z:PL[i].z},'+'+N(got),r==='gold'?'#f2c14e':'#f0a070');sfx('coin');return got;}
 function canPay(r,c){return S[r]>=c;}
-function upgradePlot(i){const p=S.plots[i];if(!p||p.end)return;const d=B[p.t],k=p.l+1;if(k>bMax()){toast(L('طوّر القاعة الكبرى أولاً','Upgrade the Great Hall first'));return;}
-  const c=bCost(p.t,k);if(!canPay(d.pay,c)){toast(L(`ينقصك ${price(c-S[d.pay],d.pay)}`,`You need ${price(c-S[d.pay],d.pay)} more`));return;}if(freeB()<1){toast(L('كل البنّائين مشغولون','All builders are busy'));return;}
+function upgradePlot(i){const p=S.plots[i];if(!p||p.end)return;const d=B[p.t],k=p.l+1;if(k>bMax()){toast(TX('طوّر القاعة الكبرى أولاً','Upgrade the Great Hall first'));return;}
+  const c=bCost(p.t,k);if(!canPay(d.pay,c)){toast(TX(`ينقصك ${price(c-S[d.pay],d.pay)}`,`You need ${price(c-S[d.pay],d.pay)} more`));return;}if(freeB()<1){toast(TX('كل البنّائين مشغولون','All builders are busy'));return;}
   if(d.kind==='prod')collect(i);S[d.pay]-=c;p.end=Date.now()+LV_T[k]*1000*tm();p.last=Date.now();S.st.built++;rebuildPlot(i);sfx('build');save();}
-function upgradeHall(){if(S.hall.end||S.hall.l>=HALL_MAX)return;const c=HALL_C[S.hall.l+1];if(!canPay('gold',c)){toast(L(`ينقصك ${price(c-S.gold,'gold')}`,`You need ${price(c-S.gold,'gold')} more`));return;}
-  if(freeB()<1){toast(L('كل البنّائين مشغولون','All builders are busy'));return;}S.gold-=c;S.hall.end=Date.now()+HALL_T[S.hall.l+1]*1000*tm();S.st.built++;rebuildKeep();sfx('build');save();}
-function upgradeHero(){if(S.heroEnd)return;const L=S.heroL;if(L>=heroMax()){toast(L('طوّر القاعة الكبرى لرفع حد القائد','Upgrade the Great Hall to raise the Commander\'s cap'));return;}const c=heroCost(L);if(!canPay('dates',c)){toast(L(`ينقصك ${price(c-S.dates,'dates')}`,`You need ${price(c-S.dates,'dates')} more`));return;}
-  if(freeB()<1){toast(L('كل البنّائين مشغولون','All builders are busy'));return;}S.dates-=c;S.heroEnd=Date.now()+heroTime(L)*1000;sfx('build');save();}
-function upgradeWall(){if(S.wallEnd)return;const k=S.wallL+1;if(k>Math.min(5,S.hall.l)){toast(L('طوّر القاعة الكبرى أولاً','Upgrade the Great Hall first'));return;}const c=WALL_C[k];if(!canPay('gold',c)){toast(L(`ينقصك ${price(c-S.gold,'gold')}`,`You need ${price(c-S.gold,'gold')} more`));return;}
-  if(freeB()<1){toast(L('كل البنّائين مشغولون','All builders are busy'));return;}S.gold-=c;S.wallEnd=Date.now()+LV_T[k]*1000*tm();S.st.built++;sfx('build');save();}
+function upgradeHall(){if(S.hall.end||S.hall.l>=HALL_MAX)return;const c=HALL_C[S.hall.l+1];if(!canPay('gold',c)){toast(TX(`ينقصك ${price(c-S.gold,'gold')}`,`You need ${price(c-S.gold,'gold')} more`));return;}
+  if(freeB()<1){toast(TX('كل البنّائين مشغولون','All builders are busy'));return;}S.gold-=c;S.hall.end=Date.now()+HALL_T[S.hall.l+1]*1000*tm();S.st.built++;rebuildKeep();sfx('build');save();}
+function upgradeHero(){if(S.heroEnd)return;const L=S.heroL;if(L>=heroMax()){toast(TX('طوّر القاعة الكبرى لرفع حد القائد','Upgrade the Great Hall to raise the Commander\'s cap'));return;}const c=heroCost(L);if(!canPay('dates',c)){toast(TX(`ينقصك ${price(c-S.dates,'dates')}`,`You need ${price(c-S.dates,'dates')} more`));return;}
+  if(freeB()<1){toast(TX('كل البنّائين مشغولون','All builders are busy'));return;}S.dates-=c;S.heroEnd=Date.now()+heroTime(L)*1000;sfx('build');save();}
+function upgradeWall(){if(S.wallEnd)return;const k=S.wallL+1;if(k>Math.min(5,S.hall.l)){toast(TX('طوّر القاعة الكبرى أولاً','Upgrade the Great Hall first'));return;}const c=WALL_C[k];if(!canPay('gold',c)){toast(TX(`ينقصك ${price(c-S.gold,'gold')}`,`You need ${price(c-S.gold,'gold')} more`));return;}
+  if(freeB()<1){toast(TX('كل البنّائين مشغولون','All builders are busy'));return;}S.gold-=c;S.wallEnd=Date.now()+LV_T[k]*1000*tm();S.st.built++;sfx('build');save();}
 function giveR(r){Object.entries(r).forEach(([k,v])=>{if(k==='pearl')S.pearl+=v;else if(k==='cos'){S.cos[v]=1;applyCos();}else addRes(k,v);});}
-const rwTxt=r=>Object.entries(r).map(([k,v])=>k==='cos'?L('مظهر جديد','New look'):N(v)+' '+RN[k]).join(L(' و',' and '));
+const rwTxt=r=>Object.entries(r).map(([k,v])=>k==='cos'?TX('مظهر جديد','New look'):N(v)+' '+RN[k]).join(TX(' و',' and '));
 function applyCos(){gateMesh.material=mat(S.cos&&S.cos.gate?0xd8b24a:WOOD);if(keepG)rebuildKeep();}
 const today=()=>new Date().toDateString();
 function ensureDay(){const d=today();if(S.dq.day!==d)S.dq={day:d,base:{raidsWon:S.st.raidsWon,nights:S.st.nights||0,collected:S.st.collected,trained:S.st.trained},claimed:{}};}
 const dqv=q=>clamp((S.st[q.k]||0)-(S.dq.base[q.k]||0),0,q.goal);
-function claimDQ(id){ensureDay();const q=DQ.find(x=>x.id===id);if(!q||S.dq.claimed[id]||dqv(q)<q.goal)return;S.dq.claimed[id]=1;S.pearl+=8;addPts(25);toast(L('+٨ لؤلؤ و٢٥ نقطة موسم','+8 pearls and 25 season points'));sfx('coin');save();}
+function claimDQ(id){ensureDay();const q=DQ.find(x=>x.id===id);if(!q||S.dq.claimed[id]||dqv(q)<q.goal)return;S.dq.claimed[id]=1;S.pearl+=8;addPts(25);toast(TX('+٨ لؤلؤ و٢٥ نقطة موسم','+8 pearls and 25 season points'));sfx('coin');save();}
 const chestReady=()=>S.daily.day!==today();
 const chestStreak=()=>chestReady()?(S.daily.day===new Date(Date.now()-864e5).toDateString()?Math.min(7,S.daily.streak+1):1):S.daily.streak;
-function claimChest(){if(!chestReady())return;const s=chestStreak();S.daily={day:today(),streak:s};const g=addRes('gold',150*s),d=addRes('dates',150*s);S.pearl+=4*s;toast(L(`صندوق اليوم ${N(s)}: ${N(g)} ذهب و${N(d)} تمر و${N(4*s)} لؤلؤ`,`Day ${N(s)} chest: ${N(g)} gold, ${N(d)} dates and ${N(4*s)} pearls`));sfx('unlock');save();}
+function claimChest(){if(!chestReady())return;const s=chestStreak();S.daily={day:today(),streak:s};const g=addRes('gold',150*s),d=addRes('dates',150*s);S.pearl+=4*s;toast(TX(`صندوق اليوم ${N(s)}: ${N(g)} ذهب و${N(d)} تمر و${N(4*s)} لؤلؤ`,`Day ${N(s)} chest: ${N(g)} gold, ${N(d)} dates and ${N(4*s)} pearls`));sfx('unlock');save();}
 const seasonId=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1);};
 function ensureSeason(){if(S.season.id!==seasonId())S.season={id:seasonId(),pts:0,claimed:{}};}
 function addPts(n){ensureSeason();S.season.pts+=n;}
-function claimTier(i){ensureSeason();const t=SEASON[i];if(!t||S.season.claimed[i]||S.season.pts<t.p)return;S.season.claimed[i]=1;giveR(t.r);toast(L('مكافأة الموسم: ','Season reward: ')+t.n);sfx('unlock');save();}
+function claimTier(i){ensureSeason();const t=SEASON[i];if(!t||S.season.claimed[i]||S.season.pts<t.p)return;S.season.claimed[i]=1;giveR(t.r);toast(TX('مكافأة الموسم: ','Season reward: ')+t.n);sfx('unlock');save();}
 const daysLeft=()=>{const d=new Date(),e=new Date(d.getFullYear(),d.getMonth()+1,1);return Math.max(1,Math.ceil((e-d)/864e5));};
 function defPower(){let d=0;S.plots.forEach(p=>{if(p&&p.l>0&&!p.end&&B[p.t].kind==='def')d+=({archer:22,cat:38,fire:32,sand:15,ballista:40,barjeel:30,falcon:45,mirror:55})[p.t]*p.l;});return d+S.wallL*18+S.hall.l*12+S.heroL*4;}
 function simulateAway(){if(S.hall.l<2)return 0;const now=Date.now(),last=S.lastSeen||now,away=(now-last)/1000,iv=900*tm();const n=Math.min(3,Math.floor(away/iv));let any=0;
@@ -849,155 +849,155 @@ function simulateAway(){if(S.hall.l<2)return 0;const now=Date.now(),last=S.lastS
     const tro=stars?-Math.min(S.trophies,4+4*stars):7;S.trophies=Math.max(0,S.trophies+tro);if(stars>=2)S.shield=at+(stars===3?3600:2400)*tm()*1000;
     S.log.unshift({t:at,name:RAIDERS[Math.floor(Math.random()*RAIDERS.length)],stars,pct,g,d,tro,rev:0,lv:clamp(2*S.hall.l-2+Math.floor(rand(0,2)),0,17)});any++;}
   S.log=S.log.slice(0,10);if(any)S.logNew=1;return any;}
-const ago=ms=>{const s=ms/1000;return s<3600?L(`قبل ${N(Math.max(1,s/60))} دقيقة`,`${N(Math.max(1,s/60))} min ago`):s<86400?L(`قبل ${N(s/3600)} ساعة`,`${N(s/3600)} h ago`):L(`قبل ${N(s/86400)} يوم`,`${N(s/86400)} days ago`);};
-function revenge(i){const e=S.log[i];if(!e||e.rev||!e.stars)return;if(armyHs()<=0){toast(L('جيشك فارغ، درّب جنوداً أولاً','Your army is empty. Train troops first'));return;}e.rev=1;if(S.shield>Date.now()){S.shield=0;toast(L('سقط درعك لأنك هاجمت','Your shield dropped because you attacked'));}
-  startRaid({name:L('انتقام من ','Revenge on ')+e.name,level:e.lv,seed:Math.floor(e.t%1e9),loot:{gold:Math.max(300,Math.round(e.g*1.4)),dates:Math.max(300,Math.round(e.d*1.4))},camp:null});}
+const ago=ms=>{const s=ms/1000;return s<3600?TX(`قبل ${N(Math.max(1,s/60))} دقيقة`,`${N(Math.max(1,s/60))} min ago`):s<86400?TX(`قبل ${N(s/3600)} ساعة`,`${N(s/3600)} h ago`):TX(`قبل ${N(s/86400)} يوم`,`${N(s/86400)} days ago`);};
+function revenge(i){const e=S.log[i];if(!e||e.rev||!e.stars)return;if(armyHs()<=0){toast(TX('جيشك فارغ، درّب جنوداً أولاً','Your army is empty. Train troops first'));return;}e.rev=1;if(S.shield>Date.now()){S.shield=0;toast(TX('سقط درعك لأنك هاجمت','Your shield dropped because you attacked'));}
+  startRaid({name:TX('انتقام من ','Revenge on ')+e.name,level:e.lv,seed:Math.floor(e.t%1e9),loot:{gold:Math.max(300,Math.round(e.g*1.4)),dates:Math.max(300,Math.round(e.d*1.4))},camp:null});}
 function applySave(s){S=s;if(mode!=='village')goHome();rebuildKeep();for(let i=0;i<NPL;i++)rebuildPlot(i);applyWallLook();applyCos();closePanel();closeSheet();setHud();save();}
-function doBuild(i,t){const d=B[t];if(S.plots[i])return;if(countOf(t)>=allow(t)){toast(L('وصلت للحد الأقصى من هذا المبنى','You reached the limit for this building'));return;}
-  const c=bCost(t,1);if(!canPay(d.pay,c)){toast(L(`ينقصك ${price(c-S[d.pay],d.pay)}`,`You need ${price(c-S[d.pay],d.pay)} more`));return;}if(freeB()<1){toast(L('كل البنّائين مشغولون','All builders are busy'));return;}
+function doBuild(i,t){const d=B[t];if(S.plots[i])return;if(countOf(t)>=allow(t)){toast(TX('وصلت للحد الأقصى من هذا المبنى','You reached the limit for this building'));return;}
+  const c=bCost(t,1);if(!canPay(d.pay,c)){toast(TX(`ينقصك ${price(c-S[d.pay],d.pay)}`,`You need ${price(c-S[d.pay],d.pay)} more`));return;}if(freeB()<1){toast(TX('كل البنّائين مشغولون','All builders are busy'));return;}
   S[d.pay]-=c;const now=Date.now();S.plots[i]={t,l:0,end:now+LV_T[1]*1000*tm(),stored:0,last:now};S.st.built++;rebuildPlot(i);sfx('build');save();openSheet(i);}
-function finishNow(target){const now=Date.now();if(target==='hero'||target==='wall'){const key=target+'End';if(!S[key])return;const c=pearlsFor((S[key]-now)/1000);if(S.pearl<c){toast(L('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S[key]=now;tickEco(now);save();return;}
-  if(target==='hall'){if(!S.hall.end)return;const c=pearlsFor((S.hall.end-now)/1000);if(S.pearl<c){toast(L('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S.hall.end=now;}
-  else if(target==='research'){if(!S.research)return;const c=pearlsFor((S.research.end-now)/1000);if(S.pearl<c){toast(L('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S.research.end=now;}
-  else{const p=S.plots[target];if(!p||!p.end)return;const c=pearlsFor((p.end-now)/1000);if(S.pearl<c){toast(L('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;p.end=now;}
+function finishNow(target){const now=Date.now();if(target==='hero'||target==='wall'){const key=target+'End';if(!S[key])return;const c=pearlsFor((S[key]-now)/1000);if(S.pearl<c){toast(TX('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S[key]=now;tickEco(now);save();return;}
+  if(target==='hall'){if(!S.hall.end)return;const c=pearlsFor((S.hall.end-now)/1000);if(S.pearl<c){toast(TX('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S.hall.end=now;}
+  else if(target==='research'){if(!S.research)return;const c=pearlsFor((S.research.end-now)/1000);if(S.pearl<c){toast(TX('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S.research.end=now;}
+  else{const p=S.plots[target];if(!p||!p.end)return;const c=pearlsFor((p.end-now)/1000);if(S.pearl<c){toast(TX('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;p.end=now;}
   tickEco(now);save();}
-function train(t){if(!troopOpen(t))return;if(armyHs()+queueHs()+TR[t].hs>armyCap()){toast(L('المعسكرات ممتلئة','Army camps are full'));return;}if(!S.queue.length)S.qStart=Date.now();S.queue.push(t);sfx('tap');}
+function train(t){if(!troopOpen(t))return;if(armyHs()+queueHs()+TR[t].hs>armyCap()){toast(TX('المعسكرات ممتلئة','Army camps are full'));return;}if(!S.queue.length)S.qStart=Date.now();S.queue.push(t);sfx('tap');}
 function untrain(t){const k=S.queue.lastIndexOf(t);if(k>=0){S.queue.splice(k,1);if(k===0)S.qStart=S.queue.length?Date.now():0;}else if(S.army[t]>0)S.army[t]--;}
-function research(t){if(S.research||!troopOpen(t))return;if((S.tl[t]||1)>=trMax()){toast(L('طوّر الحدّاد لرفع الحد الأقصى','Upgrade the Blacksmith to raise the cap'));return;}const c=rCost(t);if(!canPay('dates',c)){toast(L(`ينقصك ${price(c-S.dates,'dates')}`,`You need ${price(c-S.dates,'dates')} more`));return;}
+function research(t){if(S.research||!troopOpen(t))return;if((S.tl[t]||1)>=trMax()){toast(TX('طوّر الحدّاد لرفع الحد الأقصى','Upgrade the Blacksmith to raise the cap'));return;}const c=rCost(t);if(!canPay('dates',c)){toast(TX(`ينقصك ${price(c-S.dates,'dates')}`,`You need ${price(c-S.dates,'dates')} more`));return;}
   S.dates-=c;S.research={t,end:Date.now()+rTime(t)*1000};sfx('build');save();}
 const BUILDER_COST=[0,0,0,250,500];
-function buyBuilder(){const n=S.builders+1;if(n>4)return;const c=BUILDER_COST[n];if(S.pearl<c){toast(L('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S.builders=n;toast(L('انضم بنّاء جديد إلى حصنك','A new builder joined your fort'));sfx('unlock');save();}
-function claim(id){const t=TASKS.find(x=>x.id===id);if(!t||S.tasks[id]||t.v()<t.goal)return;S.tasks[id]=1;S.pearl+=t.r;toast(L(`+${N(t.r)} لؤلؤ`,`+${N(t.r)} pearls`));sfx('coin');save();}
+function buyBuilder(){const n=S.builders+1;if(n>4)return;const c=BUILDER_COST[n];if(S.pearl<c){toast(TX('لا يكفي اللؤلؤ','Not enough pearls'));return;}S.pearl-=c;S.builders=n;toast(TX('انضم بنّاء جديد إلى حصنك','A new builder joined your fort'));sfx('unlock');save();}
+function claim(id){const t=TASKS.find(x=>x.id===id);if(!t||S.tasks[id]||t.v()<t.goal)return;S.tasks[id]=1;S.pearl+=t.r;toast(TX(`+${N(t.r)} لؤلؤ`,`+${N(t.r)} pearls`));sfx('coin');save();}
 function checkUnlock(){let idx=0;WPN.forEach((w,i)=>{if(S.kills>=w.kills)idx=i;});
-  if(idx>S.wIdx){S.wIdx=idx;S.weapon=WPN[idx].id;save();toast(L('سلاح جديد للقائد: ','New weapon for the Commander: ')+WPN[idx].n);sfx('unlock');}}
+  if(idx>S.wIdx){S.wIdx=idx;S.weapon=WPN[idx].id;save();toast(TX('سلاح جديد للقائد: ','New weapon for the Commander: ')+WPN[idx].n);sfx('unlock');}}
 
 /* =================== sheet (building info) =================== */
 let sheetT=null,sheetHTML='',shopPlot=null,placing=null,armyTab='army',moving=null,taskTab='daily',resetArmed=false;
 const btn=(a,label,en,cls,sub)=>`<button class="btn ${cls||''}" data-a="${a}" ${en?'':'disabled'}>${label}${sub?`<small>${sub}</small>`:''}</button>`;
-function upReason(r,c){return freeB()<1?L('كل البنّائين مشغولون','All builders are busy'):S[r]<c?L(`ينقصك ${price(c-S[r],r)}`,`You need ${price(c-S[r],r)} more`):'';}
-function hallUnlocks(k){const n=BORDER.filter(t=>(B[t].cnt[k]||0)>(B[t].cnt[k-1]||0)).map(t=>B[t].n);return L(`مبانٍ حتى المستوى ${N(Math.min(5,k+1))}`,`Buildings up to level ${N(Math.min(5,k+1))}`)+(n.length?L('، ومزيد من: ',', and more: ')+n.join(L('، ',', ')):'');}
-function defStat(t,l){if(XDEF[t])return xStatTxt(t,l);const s=tStatRaw(t,l);return t==='fire'?L(`حرق ${D1(s.burn)} في الثانية · المدى ${N(s.range)}`,`Burn ${D1(s.burn)}/s · range ${N(s.range)}`):L(`الضرر ${D1(s.dmg)} · ${D1(s.rate)} طلقة في الثانية · المدى ${N(s.range)}`,`Damage ${D1(s.dmg)} · ${D1(s.rate)} shots/s · range ${N(s.range)}`);}
+function upReason(r,c){return freeB()<1?TX('كل البنّائين مشغولون','All builders are busy'):S[r]<c?TX(`ينقصك ${price(c-S[r],r)}`,`You need ${price(c-S[r],r)} more`):'';}
+function hallUnlocks(k){const n=BORDER.filter(t=>(B[t].cnt[k]||0)>(B[t].cnt[k-1]||0)).map(t=>B[t].n);return TX(`مبانٍ حتى المستوى ${N(Math.min(5,k+1))}`,`Buildings up to level ${N(Math.min(5,k+1))}`)+(n.length?TX('، ومزيد من: ',', and more: ')+n.join(TX('، ',', ')):'');}
+function defStat(t,l){if(XDEF[t])return xStatTxt(t,l);const s=tStatRaw(t,l);return t==='fire'?TX(`حرق ${D1(s.burn)} في الثانية · المدى ${N(s.range)}`,`Burn ${D1(s.burn)}/s · range ${N(s.range)}`):TX(`الضرر ${D1(s.dmg)} · ${D1(s.rate)} طلقة في الثانية · المدى ${N(s.range)}`,`Damage ${D1(s.dmg)} · ${D1(s.rate)} shots/s · range ${N(s.range)}`);}
 function openSheet(t){sheetT=t;sheetHTML='';renderSheet();sheet.hidden=false;if(t==='hall'){selRing.position.set(0,.08,FZ);selRing.scale.setScalar(1.6);selRing.visible=true;}else if(typeof t==='number'){selRing.position.set(PL[t].x,.08,PL[t].z);selRing.scale.setScalar(1);selRing.visible=true;}else selRing.visible=false;}
 function closeSheet(){sheetT=null;sheet.hidden=true;sheetHTML='';selRing.visible=false;}
 function renderSheet(){if(sheetT===null)return;const now=Date.now();let title='',lines=[],acts=[];
-  if(sheetT==='hall'){const L=S.hall.l;title=L(`القاعة الكبرى · مستوى ${N(L)}`,`Great Hall · level ${N(L)}`);lines.push(L(`قلب حصنك. تسمح بمبانٍ حتى المستوى ${N(bMax())}، وتخزّن ${N(1000*L)} من كل مورد.`,`The heart of your fort. Allows buildings up to level ${N(bMax())} and stores ${N(1000*L)} of each resource.`));
-    if(S.hall.end){const rem=(S.hall.end-now)/1000;acts.push(L(`<span class="timer">ينتهي خلال ${fmtT(rem)}</span>`,`<span class="timer">Done in ${fmtT(rem)}</span>`),btn('fin',L('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',L(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)));}
-    else if(L<HALL_MAX){const c=HALL_C[L+1];lines.push(L(`المستوى التالي يفتح: ${hallUnlocks(L+1)}.`,`Next level unlocks: ${hallUnlocks(L+1)}.`));acts.push(btn('uphall',L('طوّر القاعة','Upgrade the hall'),S.gold>=c&&freeB()>0,'primary',upReason('gold',c)||`${price(c,'gold')} · ${fmtT(HALL_T[L+1]*tm())}`));}
-    else lines.push(L('وصلت إلى أعلى مستوى.','Max level reached.'));}
-  else if(sheetT==='wall'){const L=S.wallL,mx=Math.min(5,S.hall.l);title=L(`أسوار الحصن · مستوى ${N(L)}`,`Fort Walls · level ${N(L)}`);lines.push(L(`صمود البوابة في الحصار ${N(gateHP())}. الأسوار تقوّي دفاعك أيضاً أمام غارات الغزاة أثناء غيابك.`,`Gate strength in the siege: ${N(gateHP())}. Walls also help your defense against raids while you are away.`));
-    if(S.wallEnd){const rem=(S.wallEnd-now)/1000;acts.push(L(`<span class="timer">ينتهي خلال ${fmtT(rem)}</span>`,`<span class="timer">Done in ${fmtT(rem)}</span>`),btn('fin',L('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',L(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)));}
-    else if(L<mx){const c=WALL_C[L+1];lines.push(L('المستوى التالي: صمود البوابة +٦٠','Next level: gate strength +60'));acts.push(btn('upwall',L('طوّر الأسوار','Upgrade walls'),S.gold>=c&&freeB()>0,'primary',upReason('gold',c)||`${price(c,'gold')} · ${fmtT(LV_T[L+1]*tm())}`));}
-    else lines.push(L>=5?L('وصلت إلى أعلى مستوى.','Max level reached.'):L('طوّر القاعة الكبرى لرفع الحد.','Upgrade the Great Hall to raise the cap.'));}
+  if(sheetT==='hall'){const L=S.hall.l;title=TX(`القاعة الكبرى · مستوى ${N(L)}`,`Great Hall · level ${N(L)}`);lines.push(TX(`قلب حصنك. تسمح بمبانٍ حتى المستوى ${N(bMax())}، وتخزّن ${N(1000*L)} من كل مورد.`,`The heart of your fort. Allows buildings up to level ${N(bMax())} and stores ${N(1000*L)} of each resource.`));
+    if(S.hall.end){const rem=(S.hall.end-now)/1000;acts.push(TX(`<span class="timer">ينتهي خلال ${fmtT(rem)}</span>`,`<span class="timer">Done in ${fmtT(rem)}</span>`),btn('fin',TX('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',TX(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)));}
+    else if(L<HALL_MAX){const c=HALL_C[L+1];lines.push(TX(`المستوى التالي يفتح: ${hallUnlocks(L+1)}.`,`Next level unlocks: ${hallUnlocks(L+1)}.`));acts.push(btn('uphall',TX('طوّر القاعة','Upgrade the hall'),S.gold>=c&&freeB()>0,'primary',upReason('gold',c)||`${price(c,'gold')} · ${fmtT(HALL_T[L+1]*tm())}`));}
+    else lines.push(TX('وصلت إلى أعلى مستوى.','Max level reached.'));}
+  else if(sheetT==='wall'){const L=S.wallL,mx=Math.min(5,S.hall.l);title=TX(`أسوار الحصن · مستوى ${N(L)}`,`Fort Walls · level ${N(L)}`);lines.push(TX(`صمود البوابة في الحصار ${N(gateHP())}. الأسوار تقوّي دفاعك أيضاً أمام غارات الغزاة أثناء غيابك.`,`Gate strength in the siege: ${N(gateHP())}. Walls also help your defense against raids while you are away.`));
+    if(S.wallEnd){const rem=(S.wallEnd-now)/1000;acts.push(TX(`<span class="timer">ينتهي خلال ${fmtT(rem)}</span>`,`<span class="timer">Done in ${fmtT(rem)}</span>`),btn('fin',TX('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',TX(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)));}
+    else if(L<mx){const c=WALL_C[L+1];lines.push(TX('المستوى التالي: صمود البوابة +٦٠','Next level: gate strength +60'));acts.push(btn('upwall',TX('طوّر الأسوار','Upgrade walls'),S.gold>=c&&freeB()>0,'primary',upReason('gold',c)||`${price(c,'gold')} · ${fmtT(LV_T[L+1]*tm())}`));}
+    else lines.push(L>=5?TX('وصلت إلى أعلى مستوى.','Max level reached.'):TX('طوّر القاعة الكبرى لرفع الحد.','Upgrade the Great Hall to raise the cap.'));}
   else{const p=S.plots[sheetT];if(!p){closeSheet();return;}const d=B[p.t];
-    title=p.l===0?L(`${d.n} · قيد البناء`,`${d.n} · building`):L(`${d.n} · مستوى ${N(p.l)}`,`${d.n} · level ${N(p.l)}`);lines.push(d.d);
+    title=p.l===0?TX(`${d.n} · قيد البناء`,`${d.n} · building`):TX(`${d.n} · مستوى ${N(p.l)}`,`${d.n} · level ${N(p.l)}`);lines.push(d.d);
     if(p.l>0){
-      if(d.kind==='prod')lines.push(L(`الإنتاج ${N(RATE[p.l]/tm()*60)} ${RN[d.prod]} في الدقيقة · المخزون ${N(p.stored)} من ${N(PCAP[p.l])}`,`Produces ${N(RATE[p.l]/tm()*60)} ${RN[d.prod]} per minute · stored ${N(p.stored)} of ${N(PCAP[p.l])}`));
-      else if(d.kind==='store')lines.push(L(`السعة ${N(SCAP[p.l])} ${RN[d.store]}`,`Capacity ${N(SCAP[p.l])} ${RN[d.store]}`));
-      else if(d.kind==='def')lines.push(defStat(p.t,p.l)+(p.end?L(' · متوقف أثناء التطوير',' · paused while upgrading'):''));
-      else if(p.t==='barracks')lines.push(L('يفتح: ','Unlocks: ')+TORDER.filter(t=>TR[t].bar<=p.l).map(t=>TR[t].n).join(L('، ',', ')));
-      else if(p.t==='camp')lines.push(L(`يتسع لـ ${N(CAMPCAP[p.l])} من مساحة الجيش`,`Holds ${N(CAMPCAP[p.l])} army space`));
-      else if(p.t==='smithy')lines.push(L(`أعلى مستوى للجنود: ${N(Math.min(5,p.l+1))}`,`Max troop level: ${N(Math.min(5,p.l+1))}`));}
-    if(p.end){const rem=(p.end-now)/1000;acts.push(L(`<span class="timer">${p.l?L('التطوير','Upgrading'):L('البناء','Building')} ينتهي خلال ${fmtT(rem)}</span>`,`<span class="timer">${p.l?L('التطوير','Upgrading'):L('البناء','Building')} done in ${fmtT(rem)}</span>`),btn('fin',L('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',L(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)));}
+      if(d.kind==='prod')lines.push(TX(`الإنتاج ${N(RATE[p.l]/tm()*60)} ${RN[d.prod]} في الدقيقة · المخزون ${N(p.stored)} من ${N(PCAP[p.l])}`,`Produces ${N(RATE[p.l]/tm()*60)} ${RN[d.prod]} per minute · stored ${N(p.stored)} of ${N(PCAP[p.l])}`));
+      else if(d.kind==='store')lines.push(TX(`السعة ${N(SCAP[p.l])} ${RN[d.store]}`,`Capacity ${N(SCAP[p.l])} ${RN[d.store]}`));
+      else if(d.kind==='def')lines.push(defStat(p.t,p.l)+(p.end?TX(' · متوقف أثناء التطوير',' · paused while upgrading'):''));
+      else if(p.t==='barracks')lines.push(TX('يفتح: ','Unlocks: ')+TORDER.filter(t=>TR[t].bar<=p.l).map(t=>TR[t].n).join(TX('، ',', ')));
+      else if(p.t==='camp')lines.push(TX(`يتسع لـ ${N(CAMPCAP[p.l])} من مساحة الجيش`,`Holds ${N(CAMPCAP[p.l])} army space`));
+      else if(p.t==='smithy')lines.push(TX(`أعلى مستوى للجنود: ${N(Math.min(5,p.l+1))}`,`Max troop level: ${N(Math.min(5,p.l+1))}`));}
+    if(p.end){const rem=(p.end-now)/1000;acts.push(TX(`<span class="timer">${p.l?TX('التطوير','Upgrading'):TX('البناء','Building')} ينتهي خلال ${fmtT(rem)}</span>`,`<span class="timer">${p.l?TX('التطوير','Upgrading'):TX('البناء','Building')} done in ${fmtT(rem)}</span>`),btn('fin',TX('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',TX(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)));}
     else if(p.l<bMax()){const k=p.l+1,c=bCost(p.t,k);
-      const nx=d.kind==='prod'?L(`المستوى التالي: ${N(RATE[k]/tm()*60)} في الدقيقة`,`Next level: ${N(RATE[k]/tm()*60)} per minute`):d.kind==='store'?L(`المستوى التالي: ${N(SCAP[k])}`,`Next level: ${N(SCAP[k])}`):d.kind==='def'?L('المستوى التالي: ','Next level: ')+defStat(p.t,k):p.t==='barracks'&&TORDER.find(t=>TR[t].bar===k)?L(`المستوى التالي يفتح: ${TR[TORDER.find(t=>TR[t].bar===k)].n}`,`Next level unlocks: ${TR[TORDER.find(t=>TR[t].bar===k)].n}`):p.t==='camp'?L(`المستوى التالي: ${N(CAMPCAP[k])}`,`Next level: ${N(CAMPCAP[k])}`):'';
-      if(nx)lines.push(nx);acts.push(btn('up',L('طوّر','Upgrade'),S[d.pay]>=c&&freeB()>0,'primary',upReason(d.pay,c)||`${price(c,d.pay)} · ${fmtT(LV_T[k]*tm())}`));}
-    else lines.push(p.l>=5?L('وصل إلى أعلى مستوى.','Max level reached.'):L('طوّر القاعة الكبرى لفتح المستوى التالي.','Upgrade the Great Hall to unlock the next level.'));
-    if(d.kind==='prod'&&p.l>0&&p.stored>=1)acts.push(btn('collect',L('اجمع','Collect'),true,'',`+${N(p.stored)} ${RN[d.prod]}`));
-    acts.push(btn('move',L('انقل','Move'),true));
-    if(p.t==='barracks'||p.t==='camp')acts.push(btn('openarmy',L('الجيش','Army'),true));
-    if(p.t==='smithy'&&p.l>0)acts.push(btn('openlab',L('الأبحاث','Research'),true));}
-  const html=L(`<div class="sh-h"><b>${title}</b><button class="btn x" data-a="close">إغلاق</button></div>${lines.map(l=>`<p>${l}</p>`).join('')}<div class="sh-a">${acts.join('')}</div>`,`<div class="sh-h"><b>${title}</b><button class="btn x" data-a="close">Close</button></div>${lines.map(l=>`<p>${l}</p>`).join('')}<div class="sh-a">${acts.join('')}</div>`);
+      const nx=d.kind==='prod'?TX(`المستوى التالي: ${N(RATE[k]/tm()*60)} في الدقيقة`,`Next level: ${N(RATE[k]/tm()*60)} per minute`):d.kind==='store'?TX(`المستوى التالي: ${N(SCAP[k])}`,`Next level: ${N(SCAP[k])}`):d.kind==='def'?TX('المستوى التالي: ','Next level: ')+defStat(p.t,k):p.t==='barracks'&&TORDER.find(t=>TR[t].bar===k)?TX(`المستوى التالي يفتح: ${TR[TORDER.find(t=>TR[t].bar===k)].n}`,`Next level unlocks: ${TR[TORDER.find(t=>TR[t].bar===k)].n}`):p.t==='camp'?TX(`المستوى التالي: ${N(CAMPCAP[k])}`,`Next level: ${N(CAMPCAP[k])}`):'';
+      if(nx)lines.push(nx);acts.push(btn('up',TX('طوّر','Upgrade'),S[d.pay]>=c&&freeB()>0,'primary',upReason(d.pay,c)||`${price(c,d.pay)} · ${fmtT(LV_T[k]*tm())}`));}
+    else lines.push(p.l>=5?TX('وصل إلى أعلى مستوى.','Max level reached.'):TX('طوّر القاعة الكبرى لفتح المستوى التالي.','Upgrade the Great Hall to unlock the next level.'));
+    if(d.kind==='prod'&&p.l>0&&p.stored>=1)acts.push(btn('collect',TX('اجمع','Collect'),true,'',`+${N(p.stored)} ${RN[d.prod]}`));
+    acts.push(btn('move',TX('انقل','Move'),true));
+    if(p.t==='barracks'||p.t==='camp')acts.push(btn('openarmy',TX('الجيش','Army'),true));
+    if(p.t==='smithy'&&p.l>0)acts.push(btn('openlab',TX('الأبحاث','Research'),true));}
+  const html=TX(`<div class="sh-h"><b>${title}</b><button class="btn x" data-a="close">إغلاق</button></div>${lines.map(l=>`<p>${l}</p>`).join('')}<div class="sh-a">${acts.join('')}</div>`,`<div class="sh-h"><b>${title}</b><button class="btn x" data-a="close">Close</button></div>${lines.map(l=>`<p>${l}</p>`).join('')}<div class="sh-a">${acts.join('')}</div>`);
   if(html!==sheetHTML){sheetHTML=html;sheet.innerHTML=html;}}
 
 /* =================== panels =================== */
 let panelName=null,panelHTML='';
 const CLOSABLE=new Set(['shop','army','map','tasks','armory','builders','log','settings']),AUTO=new Set(['shop','army','map','tasks','armory','builders','log']);
-const wrap=(title,body)=>L(`<div class="panel"><div class="ph"><h2>${title}</h2><button class="btn x" data-a="pclose">إغلاق</button></div>${body}</div>`,`<div class="panel"><div class="ph"><h2>${title}</h2><button class="btn x" data-a="pclose">Close</button></div>${body}</div>`);
+const wrap=(title,body)=>TX(`<div class="panel"><div class="ph"><h2>${title}</h2><button class="btn x" data-a="pclose">إغلاق</button></div>${body}</div>`,`<div class="panel"><div class="ph"><h2>${title}</h2><button class="btn x" data-a="pclose">Close</button></div>${body}</div>`);
 const row=(title,tag,desc,right,cls)=>`<div class="row ${cls||''}"><h4>${title}${tag?` <em>${tag}</em>`:''}</h4>${desc?`<p>${desc}</p>`:''}${right||''}</div>`;
 const starsHTML=n=>`<span class="stars">${[0,1,2].map(i=>`<span class="${i<n?'on':''}">★</span>`).join('')}</span>`;
 function panel(n){panelName=n;panelHTML='';closeSheet();renderPanel();overlay.hidden=false;}
 function closePanel(){panelName=null;overlay.hidden=true;overlay.innerHTML='';panelHTML='';}
 function renderPanel(){if(!panelName)return;const html=PANELS[panelName]();if(html===panelHTML)return;const old=overlay.querySelector('.panel');const top=old?old.scrollTop:0;overlay.innerHTML=html;panelHTML=html;const np=overlay.querySelector('.panel');if(np)np.scrollTop=top;}
 const PANELS={
-  welcome:()=>L(`<div class="panel welcome"><h2>حصن الرمال</h2><p>أنت قائد حصن في قلب الصحراء. الغزاة يطمعون في ذهبك وتمرك.</p>
+  welcome:()=>TX(`<div class="panel welcome"><h2>حصن الرمال</h2><p>أنت قائد حصن في قلب الصحراء. الغزاة يطمعون في ذهبك وتمرك.</p>
     <ul><li>اجمع الذهب والتمر من المناجم والمزارع بالضغط عليها.</li><li>ابنِ وطوّر بالبنّائين. المؤقتات والإنتاج تعمل حتى وأنت خارج اللعبة.</li><li>درّب جيشك وأغِر على معسكرات الغزاة لتكسب النجوم والغنائم والكؤوس.</li><li>دافع عن قريتك بنفسك في حصار الليل لتفتح أسلحة أقوى.</li></ul>
-    <p>اسحب لتحريك الكاميرا، واستخدم إصبعين أو عجلة الفأرة للتقريب.</p>${btn('welcome',L('ابدأ','Start'),true,'primary',L('الصوت: رياح ومؤثرات فقط','Sound: wind and effects only'))}</div>`,`<div class="panel welcome"><h2>Sand Fort</h2><p>You command a fort in the heart of the desert. Invaders want your gold and dates.</p>
+    <p>اسحب لتحريك الكاميرا، واستخدم إصبعين أو عجلة الفأرة للتقريب.</p>${btn('welcome',TX('ابدأ','Start'),true,'primary',TX('الصوت: رياح ومؤثرات فقط','Sound: wind and effects only'))}</div>`,`<div class="panel welcome"><h2>Sand Fort</h2><p>You command a fort in the heart of the desert. Invaders want your gold and dates.</p>
     <ul><li>Collect gold and dates by tapping your mines and farms.</li><li>Build and upgrade with builders. Timers and production keep running while you are away.</li><li>Train your army and raid invader camps to win stars, loot and trophies.</li><li>Defend your village yourself in the Night Siege to unlock stronger weapons.</li></ul>
-    <p>Drag to move the camera. Use two fingers or the mouse wheel to zoom.</p>${btn('welcome',L('ابدأ','Start'),true,'primary',L('الصوت: رياح ومؤثرات فقط','Sound: wind and effects only'))}</div>`),
+    <p>Drag to move the camera. Use two fingers or the mouse wheel to zoom.</p>${btn('welcome',TX('ابدأ','Start'),true,'primary',TX('الصوت: رياح ومؤثرات فقط','Sound: wind and effects only'))}</div>`),
   shop:()=>{const rows=BORDER.map(t=>{const d=B[t],c=countOf(t),al=allow(t),cost=bCost(t,1);let lock='';
-      if(al===0)lock=L(`تفتحه القاعة مستوى ${N(firstHall(t))}`,`Unlocked at hall level ${N(firstHall(t))}`);else if(c>=al)lock=L('وصلت للحد، طوّر القاعة','Limit reached, upgrade the hall');else if(S[d.pay]<cost)lock=L(`ينقصك ${price(cost-S[d.pay],d.pay)}`,`You need ${price(cost-S[d.pay],d.pay)} more`);else if(freeB()<1)lock=L('كل البنّائين مشغولون','All builders are busy');
-      return row(d.n,L(`${N(c)} من ${N(al)}`,`${N(c)} of ${N(al)}`),d.d,btn('build:'+t,L('ابنِ','Build'),!lock,'primary',lock||`${price(cost,d.pay)}`),al===0?'locked':'');}).join('');
-    return wrap(shopPlot!=null?L('ابنِ في هذا الموقع','Build here'):L('البناء','Building'),`<p>${shopPlot!=null?L('اختر مبنى لهذا الموقع.','Pick a building for this spot.'):L('اختر مبنى، ثم اضغط حلقة فارغة في القرية. ضع الدفاعات أمام البوابة، فالغزاة يأتون من الطريق.','Pick a building, then tap an empty ring in the village. Put defenses in front of the gate: invaders come up the road.')}</p>${rows}`);},
+      if(al===0)lock=TX(`تفتحه القاعة مستوى ${N(firstHall(t))}`,`Unlocked at hall level ${N(firstHall(t))}`);else if(c>=al)lock=TX('وصلت للحد، طوّر القاعة','Limit reached, upgrade the hall');else if(S[d.pay]<cost)lock=TX(`ينقصك ${price(cost-S[d.pay],d.pay)}`,`You need ${price(cost-S[d.pay],d.pay)} more`);else if(freeB()<1)lock=TX('كل البنّائين مشغولون','All builders are busy');
+      return row(d.n,TX(`${N(c)} من ${N(al)}`,`${N(c)} of ${N(al)}`),d.d,btn('build:'+t,TX('ابنِ','Build'),!lock,'primary',lock||`${price(cost,d.pay)}`),al===0?'locked':'');}).join('');
+    return wrap(shopPlot!=null?TX('ابنِ في هذا الموقع','Build here'):TX('البناء','Building'),`<p>${shopPlot!=null?TX('اختر مبنى لهذا الموقع.','Pick a building for this spot.'):TX('اختر مبنى، ثم اضغط حلقة فارغة في القرية. ضع الدفاعات أمام البوابة، فالغزاة يأتون من الطريق.','Pick a building, then tap an empty ring in the village. Put defenses in front of the gate: invaders come up the road.')}</p>${rows}`);},
   army:()=>{const capv=armyCap(),used=armyHs(),q=queueHs();
-    const tabs=L(`<div class="tabs" role="tablist"><button role="tab" data-a="tab:army" aria-selected="${armyTab==='army'}">الجيش</button><button role="tab" data-a="tab:lab" aria-selected="${armyTab==='lab'}">الحدّاد</button></div>`,`<div class="tabs" role="tablist"><button role="tab" data-a="tab:army" aria-selected="${armyTab==='army'}">Army</button><button role="tab" data-a="tab:lab" aria-selected="${armyTab==='lab'}">Blacksmith</button></div>`);let body='';
+    const tabs=TX(`<div class="tabs" role="tablist"><button role="tab" data-a="tab:army" aria-selected="${armyTab==='army'}">الجيش</button><button role="tab" data-a="tab:lab" aria-selected="${armyTab==='lab'}">الحدّاد</button></div>`,`<div class="tabs" role="tablist"><button role="tab" data-a="tab:army" aria-selected="${armyTab==='army'}">Army</button><button role="tab" data-a="tab:lab" aria-selected="${armyTab==='lab'}">Blacksmith</button></div>`);let body='';
     if(armyTab==='army'){
-      body=L(`<div class="big"><span class="lbl2">مساحة الجيش في المعسكرات</span><strong>${N(used)} من ${N(capv)}</strong><div class="prog"><i style="width:${capv?Math.min(100,used/capv*100):0}%"></i></div><span class="lbl2">${S.queue.length?L(`قيد التدريب: ${N(S.queue.length)} جندي · يكتمل خلال ${fmtT(queueLeft())}`,`Training: ${N(S.queue.length)} troops · done in ${fmtT(queueLeft())}`):L('التدريب مجاني، ويأخذ وقتاً حسب حجم الجندي.','Training is free and takes time based on troop size.')}</span></div>`,`<div class="big"><span class="lbl2">Army space in camps</span><strong>${N(used)} of ${N(capv)}</strong><div class="prog"><i style="width:${capv?Math.min(100,used/capv*100):0}%"></i></div><span class="lbl2">${S.queue.length?L(`قيد التدريب: ${N(S.queue.length)} جندي · يكتمل خلال ${fmtT(queueLeft())}`,`Training: ${N(S.queue.length)} troops · done in ${fmtT(queueLeft())}`):L('التدريب مجاني، ويأخذ وقتاً حسب حجم الجندي.','Training is free and takes time based on troop size.')}</span></div>`);
+      body=TX(`<div class="big"><span class="lbl2">مساحة الجيش في المعسكرات</span><strong>${N(used)} من ${N(capv)}</strong><div class="prog"><i style="width:${capv?Math.min(100,used/capv*100):0}%"></i></div><span class="lbl2">${S.queue.length?TX(`قيد التدريب: ${N(S.queue.length)} جندي · يكتمل خلال ${fmtT(queueLeft())}`,`Training: ${N(S.queue.length)} troops · done in ${fmtT(queueLeft())}`):TX('التدريب مجاني، ويأخذ وقتاً حسب حجم الجندي.','Training is free and takes time based on troop size.')}</span></div>`,`<div class="big"><span class="lbl2">Army space in camps</span><strong>${N(used)} of ${N(capv)}</strong><div class="prog"><i style="width:${capv?Math.min(100,used/capv*100):0}%"></i></div><span class="lbl2">${S.queue.length?TX(`قيد التدريب: ${N(S.queue.length)} جندي · يكتمل خلال ${fmtT(queueLeft())}`,`Training: ${N(S.queue.length)} troops · done in ${fmtT(queueLeft())}`):TX('التدريب مجاني، ويأخذ وقتاً حسب حجم الجندي.','Training is free and takes time based on troop size.')}</span></div>`);
       body+=TORDER.map(t=>{const d=TR[t],open=troopOpen(t),n=S.army[t]||0,qn=S.queue.filter(x=>x===t).length,can=open&&used+q+d.hs<=capv;
-        return row(d.n,open?L(`مستوى ${N(S.tl[t])} · معك ${N(n)}${qn?L(` و${N(qn)} قيد التدريب`,` and ${N(qn)} training`):''}`,`Level ${N(S.tl[t])} · you have ${N(n)}${qn?L(` و${N(qn)} قيد التدريب`,` and ${N(qn)} training`):''}`):L(`تفتحه الثكنة مستوى ${N(d.bar)}`,`Unlocked at barracks level ${N(d.bar)}`),L(`${d.d} المساحة ${N(d.hs)}، التدريب ${fmtT(trainT(t))}.`,`${d.d} Space ${N(d.hs)}, training ${fmtT(trainT(t))}.`),
-          open?L(`<div class="pm"><button class="btn" data-a="tr-:${t}" aria-label="أنقص" ${n+qn?'':'disabled'}>−</button><button class="btn primary" data-a="tr+:${t}" aria-label="درّب" ${can?'':'disabled'}>+</button></div>`,`<div class="pm"><button class="btn" data-a="tr-:${t}" aria-label="Remove" ${n+qn?'':'disabled'}>−</button><button class="btn primary" data-a="tr+:${t}" aria-label="Train" ${can?'':'disabled'}>+</button></div>`):'',open?'':'locked');}).join('');}
+        return row(d.n,open?TX(`مستوى ${N(S.tl[t])} · معك ${N(n)}${qn?TX(` و${N(qn)} قيد التدريب`,` and ${N(qn)} training`):''}`,`Level ${N(S.tl[t])} · you have ${N(n)}${qn?TX(` و${N(qn)} قيد التدريب`,` and ${N(qn)} training`):''}`):TX(`تفتحه الثكنة مستوى ${N(d.bar)}`,`Unlocked at barracks level ${N(d.bar)}`),TX(`${d.d} المساحة ${N(d.hs)}، التدريب ${fmtT(trainT(t))}.`,`${d.d} Space ${N(d.hs)}, training ${fmtT(trainT(t))}.`),
+          open?TX(`<div class="pm"><button class="btn" data-a="tr-:${t}" aria-label="أنقص" ${n+qn?'':'disabled'}>−</button><button class="btn primary" data-a="tr+:${t}" aria-label="درّب" ${can?'':'disabled'}>+</button></div>`,`<div class="pm"><button class="btn" data-a="tr-:${t}" aria-label="Remove" ${n+qn?'':'disabled'}>−</button><button class="btn primary" data-a="tr+:${t}" aria-label="Train" ${can?'':'disabled'}>+</button></div>`):'',open?'':'locked');}).join('');}
     else{const sl=lvlOf('smithy');
-      if(!sl)body=L(`<div class="big"><strong>لم تبنِ الحدّاد بعد</strong><span class="lbl2">يُفتح عند القاعة الكبرى مستوى ٣، ويرفع قوة كل نوع من الجنود ٢٢٪ في كل مستوى.</span></div>`,`<div class="big"><strong>You have not built the Blacksmith yet</strong><span class="lbl2">Unlocks at Great Hall level 3, and raises each troop type's power by 22% per level.</span></div>`);
-      else{if(S.research){const rem=(S.research.end-Date.now())/1000;body+=L(`<div class="big"><span class="lbl2">يعمل الحدّاد على</span><strong>${TR[S.research.t].n} مستوى ${N(S.tl[S.research.t]+1)}</strong><span class="lbl2">ينتهي خلال ${fmtT(rem)}</span>${btn('resfin',L('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',L(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`))}</div>`,`<div class="big"><span class="lbl2">The Blacksmith is working on</span><strong>${TR[S.research.t].n} level ${N(S.tl[S.research.t]+1)}</strong><span class="lbl2">Done in ${fmtT(rem)}</span>${btn('resfin',L('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',L(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`))}</div>`);}
-        body+=L(`<p>أعلى مستوى متاح الآن: ${N(trMax())}. بحث واحد في كل مرة.</p>`,`<p>Highest level available now: ${N(trMax())}. One research at a time.</p>`);
+      if(!sl)body=TX(`<div class="big"><strong>لم تبنِ الحدّاد بعد</strong><span class="lbl2">يُفتح عند القاعة الكبرى مستوى ٣، ويرفع قوة كل نوع من الجنود ٢٢٪ في كل مستوى.</span></div>`,`<div class="big"><strong>You have not built the Blacksmith yet</strong><span class="lbl2">Unlocks at Great Hall level 3, and raises each troop type's power by 22% per level.</span></div>`);
+      else{if(S.research){const rem=(S.research.end-Date.now())/1000;body+=TX(`<div class="big"><span class="lbl2">يعمل الحدّاد على</span><strong>${TR[S.research.t].n} مستوى ${N(S.tl[S.research.t]+1)}</strong><span class="lbl2">ينتهي خلال ${fmtT(rem)}</span>${btn('resfin',TX('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',TX(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`))}</div>`,`<div class="big"><span class="lbl2">The Blacksmith is working on</span><strong>${TR[S.research.t].n} level ${N(S.tl[S.research.t]+1)}</strong><span class="lbl2">Done in ${fmtT(rem)}</span>${btn('resfin',TX('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',TX(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`))}</div>`);}
+        body+=TX(`<p>أعلى مستوى متاح الآن: ${N(trMax())}. بحث واحد في كل مرة.</p>`,`<p>Highest level available now: ${N(trMax())}. One research at a time.</p>`);
         body+=TORDER.map(t=>{const d=TR[t],open=troopOpen(t),L=S.tl[t]||1,c=rCost(t),mx=L>=trMax();
-          return row(d.n,L(`مستوى ${N(L)}`,`Level ${N(L)}`),open?(mx?L('وصل إلى الحد الحالي','Reached the current cap'):L(`المستوى التالي: صحة وضرر +٢٢٪ · ${fmtT(rTime(t))}`,`Next level: health and damage +22% · ${fmtT(rTime(t))}`)):L('افتحه في الثكنة أولاً','Unlock it in the Barracks first'),
-            btn('res:'+t,L('طوّر','Upgrade'),open&&!mx&&!S.research&&S.dates>=c,'primary',open&&!mx?price(c,'dates'):''),open?'':'locked');}).join('');}}
-    return wrap(L('الجيش','Army'),tabs+body);},
+          return row(d.n,TX(`مستوى ${N(L)}`,`Level ${N(L)}`),open?(mx?TX('وصل إلى الحد الحالي','Reached the current cap'):TX(`المستوى التالي: صحة وضرر +٢٢٪ · ${fmtT(rTime(t))}`,`Next level: health and damage +22% · ${fmtT(rTime(t))}`)):TX('افتحه في الثكنة أولاً','Unlock it in the Barracks first'),
+            btn('res:'+t,TX('طوّر','Upgrade'),open&&!mx&&!S.research&&S.dates>=c,'primary',open&&!mx?price(c,'dates'):''),open?'':'locked');}).join('');}}
+    return wrap(TX('الجيش','Army'),tabs+body);},
   map:()=>{const used=armyHs(),sc=30*S.hall.l;
-    let h=L(`<div class="big"><span class="lbl2">جيشك الجاهز</span><strong>${N(used)} من ${N(armyCap())}</strong><span class="lbl2">${used?L(`القائد يرافقك بسلاحه: ${weapon().n}.`,`The Commander joins you with his weapon: ${weapon().n}.`):L('درّب جنوداً من زر الجيش قبل الهجوم.','Train troops from the Army button before attacking.')}</span></div>`,`<div class="big"><span class="lbl2">Your army</span><strong>${N(used)} of ${N(armyCap())}</strong><span class="lbl2">${used?L(`القائد يرافقك بسلاحه: ${weapon().n}.`,`The Commander joins you with his weapon: ${weapon().n}.`):L('درّب جنوداً من زر الجيش قبل الهجوم.','Train troops from the Army button before attacking.')}</span></div>`);
-    h+=row(L('غارة عشوائية','Random raid'),L('كؤوس وغنائم','Trophies and loot'),L(`معسكر جديد بمستوى قاعتك كل مرة. الفوز يمنح كؤوساً، والخسارة تُفقدك بعضها. تكلفة البحث ${price(sc,'gold')}.${S.shield>Date.now()?L(' الهجوم يُسقط درعك.',' Attacking drops your shield.'):''}`,`A new camp matching your hall level every time. Winning gives trophies, losing costs some. Search cost ${price(sc,'gold')}.${S.shield>Date.now()?L(' الهجوم يُسقط درعك.',' Attacking drops your shield.'):''}`),btn('rraid',L('ابحث','Search'),used>0&&S.gold>=sc,'primary'));
-    h+=L('<h3 class="sub">حملة الغزاة</h3>','<h3 class="sub">Invader campaign</h3>');
+    let h=TX(`<div class="big"><span class="lbl2">جيشك الجاهز</span><strong>${N(used)} من ${N(armyCap())}</strong><span class="lbl2">${used?TX(`القائد يرافقك بسلاحه: ${weapon().n}.`,`The Commander joins you with his weapon: ${weapon().n}.`):TX('درّب جنوداً من زر الجيش قبل الهجوم.','Train troops from the Army button before attacking.')}</span></div>`,`<div class="big"><span class="lbl2">Your army</span><strong>${N(used)} of ${N(armyCap())}</strong><span class="lbl2">${used?TX(`القائد يرافقك بسلاحه: ${weapon().n}.`,`The Commander joins you with his weapon: ${weapon().n}.`):TX('درّب جنوداً من زر الجيش قبل الهجوم.','Train troops from the Army button before attacking.')}</span></div>`);
+    h+=row(TX('غارة عشوائية','Random raid'),TX('كؤوس وغنائم','Trophies and loot'),TX(`معسكر جديد بمستوى قاعتك كل مرة. الفوز يمنح كؤوساً، والخسارة تُفقدك بعضها. تكلفة البحث ${price(sc,'gold')}.${S.shield>Date.now()?TX(' الهجوم يُسقط درعك.',' Attacking drops your shield.'):''}`,`A new camp matching your hall level every time. Winning gives trophies, losing costs some. Search cost ${price(sc,'gold')}.${S.shield>Date.now()?TX(' الهجوم يُسقط درعك.',' Attacking drops your shield.'):''}`),btn('rraid',TX('ابحث','Search'),used>0&&S.gold>=sc,'primary'));
+    h+=TX('<h3 class="sub">حملة الغزاة</h3>','<h3 class="sub">Invader campaign</h3>');
     h+=CAMPS.map((n,i)=>{const c=S.camps[i],st=c?c.stars:0,open=i===0||(S.camps[i-1]&&S.camps[i-1].stars>0);const L=c?c:campLoot(i);
-      return row(`${N(i+1)}. ${n}`,starsHTML(st),open?L(`الغنائم المتبقية: ${price(L.gold,'gold')}، ${price(L.dates,'dates')}${st<3?L(' · ثلاث نجوم تمنح ١٥ لؤلؤاً',' · three stars give 15 pearls'):''}`,`Loot left: ${price(L.gold,'gold')}, ${price(L.dates,'dates')}${st<3?L(' · ثلاث نجوم تمنح ١٥ لؤلؤاً',' · three stars give 15 pearls'):''}`):L('انتصر في المعسكر السابق لفتحه','Win the previous camp to unlock it'),btn('camp:'+i,L('هاجم','Attack'),open&&used>0,'primary'),open?'':'locked');}).join('');
-    return wrap(L('الهجوم','Attack'),h);},
-  tasks:()=>{ensureDay();ensureSeason();const tabs=`<div class="tabs three" role="tablist">${['daily','season','ach'].map((k,i)=>`<button role="tab" data-a="ttab:${k}" aria-selected="${taskTab===k}">${[L('اليومية','Daily'),L('الموسم','Season'),L('الإنجازات','Achievements')][i]}</button>`).join('')}</div>`;let b='';
+      return row(`${N(i+1)}. ${n}`,starsHTML(st),open?TX(`الغنائم المتبقية: ${price(L.gold,'gold')}، ${price(L.dates,'dates')}${st<3?TX(' · ثلاث نجوم تمنح ١٥ لؤلؤاً',' · three stars give 15 pearls'):''}`,`Loot left: ${price(L.gold,'gold')}, ${price(L.dates,'dates')}${st<3?TX(' · ثلاث نجوم تمنح ١٥ لؤلؤاً',' · three stars give 15 pearls'):''}`):TX('انتصر في المعسكر السابق لفتحه','Win the previous camp to unlock it'),btn('camp:'+i,TX('هاجم','Attack'),open&&used>0,'primary'),open?'':'locked');}).join('');
+    return wrap(TX('الهجوم','Attack'),h);},
+  tasks:()=>{ensureDay();ensureSeason();const tabs=`<div class="tabs three" role="tablist">${['daily','season','ach'].map((k,i)=>`<button role="tab" data-a="ttab:${k}" aria-selected="${taskTab===k}">${[TX('اليومية','Daily'),TX('الموسم','Season'),TX('الإنجازات','Achievements')][i]}</button>`).join('')}</div>`;let b='';
     if(taskTab==='daily'){const cr=chestReady(),s=chestStreak();
-      b+=row(L('صندوق اليوم','Daily chest'),L(`اليوم ${N(s)} من ٧`,`Day ${N(s)} of 7`),cr?L(`${price(150*s,'gold')} و${price(150*s,'dates')} و${price(4*s,'pearl')}. ادخل كل يوم لتكبر المكافأة.`,`${price(150*s,'gold')}, ${price(150*s,'dates')} and ${price(4*s,'pearl')}. Come back every day for a bigger reward.`):L('فتحته اليوم. عد غداً لصندوق أكبر.','Opened today. Come back tomorrow for a bigger chest.'),btn('chest',L('افتح','Open'),cr,'primary'));
-      b+=DQ.map(q=>{const v=dqv(q),cl=S.dq.claimed[q.id];return L(`<div class="row ${cl?'done':''}"><h4>${q.n} <em>٨ لؤلؤ · ٢٥ نقطة</em></h4><div class="prog"><i style="width:${v/q.goal*100}%"></i></div><p>${N(v)} من ${N(q.goal)}</p>${cl?btn('none',L('استُلمت','Claimed'),false):btn('dq:'+q.id,L('استلم','Claim'),v>=q.goal,'primary')}</div>`,`<div class="row ${cl?'done':''}"><h4>${q.n} <em>8 pearls · 25 points</em></h4><div class="prog"><i style="width:${v/q.goal*100}%"></i></div><p>${N(v)} of ${N(q.goal)}</p>${cl?btn('none',L('استُلمت','Claimed'),false):btn('dq:'+q.id,L('استلم','Claim'),v>=q.goal,'primary')}</div>`);}).join('');
-      b+=L('<p>المهام اليومية تتجدد كل يوم.</p>','<p>Daily quests refresh every day.</p>');}
-    else if(taskTab==='season'){b+=L(`<div class="big"><span class="lbl2">درب الموسم · باقٍ ${N(daysLeft())} يوم</span><strong>${N(S.season.pts)} نقطة</strong><span class="lbl2">النقاط من المهام اليومية، ونجوم الغارات، وليالي الحصار، وكل ترقية تكتمل.</span></div>`,`<div class="big"><span class="lbl2">Season track · ${N(daysLeft())} days left</span><strong>${N(S.season.pts)} points</strong><span class="lbl2">Points come from daily quests, raid stars, siege nights and every finished upgrade.</span></div>`);
-      b+=SEASON.map((t,i)=>{const got=S.season.claimed[i],ready=!got&&S.season.pts>=t.p;return L(`<div class="tier ${got?'got':ready?'ready':''}"><span class="n">${N(i+1)}</span><p><b>${t.n}</b><br><span class="mute">${N(t.p)} نقطة</span></p>${got?btn('none',L('استُلمت','Claimed'),false):btn('tier:'+i,L('استلم','Claim'),ready,'primary')}</div>`,`<div class="tier ${got?'got':ready?'ready':''}"><span class="n">${N(i+1)}</span><p><b>${t.n}</b><br><span class="mute">${N(t.p)} points</span></p>${got?btn('none',L('استُلمت','Claimed'),false):btn('tier:'+i,L('استلم','Claim'),ready,'primary')}</div>`);}).join('');}
-    else b+=L('<p>إنجازات دائمة تكافئك باللؤلؤ.</p>','<p>Permanent achievements that reward you with pearls.</p>')+TASKS.map(t=>{const v=Math.min(t.goal,t.v()),done=v>=t.goal,cl=S.tasks[t.id];
-      return L(`<div class="row ${cl?'done':''}"><h4>${t.n} <em>${price(t.r,'pearl')}</em></h4><div class="prog"><i style="width:${v/t.goal*100}%"></i></div><p>${N(v)} من ${N(t.goal)}</p>${cl?btn('none',L('استُلمت','Claimed'),false):btn('task:'+t.id,L('استلم','Claim'),done,'primary')}</div>`,`<div class="row ${cl?'done':''}"><h4>${t.n} <em>${price(t.r,'pearl')}</em></h4><div class="prog"><i style="width:${v/t.goal*100}%"></i></div><p>${N(v)} of ${N(t.goal)}</p>${cl?btn('none',L('استُلمت','Claimed'),false):btn('task:'+t.id,L('استلم','Claim'),done,'primary')}</div>`);}).join('');
-    return wrap(L('المهام','Quests'),tabs+b);},
-  log:()=>{const now=Date.now(),sh=S.shield>now;let h=L(`<div class="big"><span class="lbl2">${sh?L('درع الهدنة يحميك من الغارات','A truce shield protects you from raids'):L('لا يوجد درع','No shield')}</span><strong>${sh?L('ينتهي خلال ','Ends in ')+fmtT((S.shield-now)/1000):L('قوة دفاعك ','Defense power ')+N(defPower())}</strong><span class="lbl2">يهاجمك الغزاة وأنت خارج اللعبة. الأبراج والأسوار والقاعة والقائد تحسم النتيجة، والقاعة تحمي ${price(400*S.hall.l,'gold')} و${price(400*S.hall.l,'dates')} من النهب. الهزيمة الكبيرة تمنحك درعاً.</span></div>`,`<div class="big"><span class="lbl2">${sh?L('درع الهدنة يحميك من الغارات','A truce shield protects you from raids'):L('لا يوجد درع','No shield')}</span><strong>${sh?L('ينتهي خلال ','Ends in ')+fmtT((S.shield-now)/1000):L('قوة دفاعك ','Defense power ')+N(defPower())}</strong><span class="lbl2">Invaders attack you while you are away. Towers, walls, the hall and the Commander decide the result, and the hall protects ${price(400*S.hall.l,'gold')} and ${price(400*S.hall.l,'dates')} from looting. A heavy defeat gives you a shield.</span></div>`);
-    if(S.hall.l<2)h+=L('<p>حماية المبتدئ: لن يهاجمك أحد حتى تطوّر القاعة الكبرى إلى المستوى ٢.</p>','<p>Beginner protection: nobody will attack you until you upgrade the Great Hall to level 2.</p>');h+=S.log.length?S.log.map((e,i)=>row(`${e.name} ${starsHTML(e.stars)}`,ago(now-e.t),e.stars?L(`دمّر ${N(e.pct)}٪ ونهب ${price(e.g,'gold')} و${price(e.d,'dates')} · ${e.tro<0?'−'+N(-e.tro):'+'+N(e.tro)} كأس`,`Destroyed ${N(e.pct)}% and looted ${price(e.g,'gold')} and ${price(e.d,'dates')} · ${e.tro<0?'−'+N(-e.tro):'+'+N(e.tro)} trophies`):L(`صدّت دفاعاتك الهجوم · +${N(e.tro)} كأس`,`Your defenses held · +${N(e.tro)} trophies`),e.stars&&!e.rev?btn('revenge:'+i,L('انتقم','Revenge'),armyHs()>0,'primary',L('غنائم أكبر مما نهب','Bigger loot than they took')):'')).join(''):L('<p>لم يهاجمك أحد بعد. الغارات تحدث فقط وأنت خارج اللعبة.</p>','<p>Nobody has attacked you yet. Raids only happen while you are away.</p>');
-    return wrap(L('سجل الدفاع','Defense log'),h);},
-  settings:()=>wrap(L('الإعدادات','Settings'),row(L('اللغة','Language'),'',L('العربية هي اللغة الحالية','English is the current language'),btn('lang',L('English','العربية'),true))+row(L('الصوت','Sound'),'',muted?L('مكتوم','Muted'):L('رياح ومؤثرات فقط، بلا موسيقى','Wind and effects only, no music'),btn('mute',muted?L('شغّل','On'):L('اكتم','Mute'),true))+
-    row(L('سرعة المؤقتات','Timer speed'),'',S.slow?L('واقعية: أبطأ ١٢ مرة، أقرب لإحساس اللعبة الحقيقية','Realistic: 12x slower, closer to the real game feel'):L('سريعة للتجربة','Fast for testing'),btn('speed',S.slow?L('اجعلها سريعة','Make fast'):L('اجعلها واقعية','Make realistic'),true))+
-    row(L('ملء الشاشة','Full screen'),'',L('يعمل على الكمبيوتر وأندرويد','Works on computers and Android'),btn('fs',L('ملء الشاشة','Full screen'),true))+
-    L(`<h3 class="sub">نسخة احتياطية</h3><p>تقدمك محفوظ في هذا المتصفح فقط. انسخ الرمز واحفظه، ثم الصقه هنا لاستعادة تقدمك على أي جهاز.</p><textarea class="code" id="saveCode" aria-label="رمز الحفظ" spellcheck="false"></textarea><div class="sh-a">${btn('export',L('انسخ رمز تقدمي','Copy my progress code'),true,'primary')}${btn('import',L('استعد من الرمز','Restore from code'),true)}</div>`,`<h3 class="sub">Backup</h3><p>Your progress is saved in this browser only. Copy the code and keep it, then paste it here to restore your progress on any device.</p><textarea class="code" id="saveCode" aria-label="Save code" spellcheck="false"></textarea><div class="sh-a">${btn('export',L('انسخ رمز تقدمي','Copy my progress code'),true,'primary')}${btn('import',L('استعد من الرمز','Restore from code'),true)}</div>`)+
-    L(`<h3 class="sub">تقرير التجربة</h3><p>إذا كنت تجرّب اللعبة لنا: اضغط الزر، ثم الصق التقرير وأرسله لصاحب اللعبة. لا يحتوي أي معلومات شخصية، فقط تقدمك في اللعبة.</p><div class="sh-a">${btn('report',L('انسخ تقرير التجربة','Copy playtest report'),true,'primary')}</div>`,`<h3 class="sub">Playtest report</h3><p>If you are testing the game for us: tap the button, then paste the report and send it to the game's owner. It has no personal information, only your game progress.</p><div class="sh-a">${btn('report',L('انسخ تقرير التجربة','Copy playtest report'),true,'primary')}</div>`)+
-    L(`<h3 class="sub">البداية من جديد</h3>`,`<h3 class="sub">Start over</h3>`)+(resetArmed?row(L('هل أنت متأكد؟','Are you sure?'),'',L('سيُحذف كل تقدمك نهائياً من هذا المتصفح.','All your progress will be deleted from this browser for good.'),`<div class="pm">${btn('reset2',L('احذف','Delete'),true,'primary')}${btn('reset0',L('تراجع','Cancel'),true)}</div>`):row(L('امسح التقدم','Wipe progress'),'',L('يحذف القرية والموارد والإنجازات.','Deletes the village, resources and achievements.'),btn('reset1',L('امسح','Wipe'),true)))),
+      b+=row(TX('صندوق اليوم','Daily chest'),TX(`اليوم ${N(s)} من ٧`,`Day ${N(s)} of 7`),cr?TX(`${price(150*s,'gold')} و${price(150*s,'dates')} و${price(4*s,'pearl')}. ادخل كل يوم لتكبر المكافأة.`,`${price(150*s,'gold')}, ${price(150*s,'dates')} and ${price(4*s,'pearl')}. Come back every day for a bigger reward.`):TX('فتحته اليوم. عد غداً لصندوق أكبر.','Opened today. Come back tomorrow for a bigger chest.'),btn('chest',TX('افتح','Open'),cr,'primary'));
+      b+=DQ.map(q=>{const v=dqv(q),cl=S.dq.claimed[q.id];return TX(`<div class="row ${cl?'done':''}"><h4>${q.n} <em>٨ لؤلؤ · ٢٥ نقطة</em></h4><div class="prog"><i style="width:${v/q.goal*100}%"></i></div><p>${N(v)} من ${N(q.goal)}</p>${cl?btn('none',TX('استُلمت','Claimed'),false):btn('dq:'+q.id,TX('استلم','Claim'),v>=q.goal,'primary')}</div>`,`<div class="row ${cl?'done':''}"><h4>${q.n} <em>8 pearls · 25 points</em></h4><div class="prog"><i style="width:${v/q.goal*100}%"></i></div><p>${N(v)} of ${N(q.goal)}</p>${cl?btn('none',TX('استُلمت','Claimed'),false):btn('dq:'+q.id,TX('استلم','Claim'),v>=q.goal,'primary')}</div>`);}).join('');
+      b+=TX('<p>المهام اليومية تتجدد كل يوم.</p>','<p>Daily quests refresh every day.</p>');}
+    else if(taskTab==='season'){b+=TX(`<div class="big"><span class="lbl2">درب الموسم · باقٍ ${N(daysLeft())} يوم</span><strong>${N(S.season.pts)} نقطة</strong><span class="lbl2">النقاط من المهام اليومية، ونجوم الغارات، وليالي الحصار، وكل ترقية تكتمل.</span></div>`,`<div class="big"><span class="lbl2">Season track · ${N(daysLeft())} days left</span><strong>${N(S.season.pts)} points</strong><span class="lbl2">Points come from daily quests, raid stars, siege nights and every finished upgrade.</span></div>`);
+      b+=SEASON.map((t,i)=>{const got=S.season.claimed[i],ready=!got&&S.season.pts>=t.p;return TX(`<div class="tier ${got?'got':ready?'ready':''}"><span class="n">${N(i+1)}</span><p><b>${t.n}</b><br><span class="mute">${N(t.p)} نقطة</span></p>${got?btn('none',TX('استُلمت','Claimed'),false):btn('tier:'+i,TX('استلم','Claim'),ready,'primary')}</div>`,`<div class="tier ${got?'got':ready?'ready':''}"><span class="n">${N(i+1)}</span><p><b>${t.n}</b><br><span class="mute">${N(t.p)} points</span></p>${got?btn('none',TX('استُلمت','Claimed'),false):btn('tier:'+i,TX('استلم','Claim'),ready,'primary')}</div>`);}).join('');}
+    else b+=TX('<p>إنجازات دائمة تكافئك باللؤلؤ.</p>','<p>Permanent achievements that reward you with pearls.</p>')+TASKS.map(t=>{const v=Math.min(t.goal,t.v()),done=v>=t.goal,cl=S.tasks[t.id];
+      return TX(`<div class="row ${cl?'done':''}"><h4>${t.n} <em>${price(t.r,'pearl')}</em></h4><div class="prog"><i style="width:${v/t.goal*100}%"></i></div><p>${N(v)} من ${N(t.goal)}</p>${cl?btn('none',TX('استُلمت','Claimed'),false):btn('task:'+t.id,TX('استلم','Claim'),done,'primary')}</div>`,`<div class="row ${cl?'done':''}"><h4>${t.n} <em>${price(t.r,'pearl')}</em></h4><div class="prog"><i style="width:${v/t.goal*100}%"></i></div><p>${N(v)} of ${N(t.goal)}</p>${cl?btn('none',TX('استُلمت','Claimed'),false):btn('task:'+t.id,TX('استلم','Claim'),done,'primary')}</div>`);}).join('');
+    return wrap(TX('المهام','Quests'),tabs+b);},
+  log:()=>{const now=Date.now(),sh=S.shield>now;let h=TX(`<div class="big"><span class="lbl2">${sh?TX('درع الهدنة يحميك من الغارات','A truce shield protects you from raids'):TX('لا يوجد درع','No shield')}</span><strong>${sh?TX('ينتهي خلال ','Ends in ')+fmtT((S.shield-now)/1000):TX('قوة دفاعك ','Defense power ')+N(defPower())}</strong><span class="lbl2">يهاجمك الغزاة وأنت خارج اللعبة. الأبراج والأسوار والقاعة والقائد تحسم النتيجة، والقاعة تحمي ${price(400*S.hall.l,'gold')} و${price(400*S.hall.l,'dates')} من النهب. الهزيمة الكبيرة تمنحك درعاً.</span></div>`,`<div class="big"><span class="lbl2">${sh?TX('درع الهدنة يحميك من الغارات','A truce shield protects you from raids'):TX('لا يوجد درع','No shield')}</span><strong>${sh?TX('ينتهي خلال ','Ends in ')+fmtT((S.shield-now)/1000):TX('قوة دفاعك ','Defense power ')+N(defPower())}</strong><span class="lbl2">Invaders attack you while you are away. Towers, walls, the hall and the Commander decide the result, and the hall protects ${price(400*S.hall.l,'gold')} and ${price(400*S.hall.l,'dates')} from looting. A heavy defeat gives you a shield.</span></div>`);
+    if(S.hall.l<2)h+=TX('<p>حماية المبتدئ: لن يهاجمك أحد حتى تطوّر القاعة الكبرى إلى المستوى ٢.</p>','<p>Beginner protection: nobody will attack you until you upgrade the Great Hall to level 2.</p>');h+=S.log.length?S.log.map((e,i)=>row(`${e.name} ${starsHTML(e.stars)}`,ago(now-e.t),e.stars?TX(`دمّر ${N(e.pct)}٪ ونهب ${price(e.g,'gold')} و${price(e.d,'dates')} · ${e.tro<0?'−'+N(-e.tro):'+'+N(e.tro)} كأس`,`Destroyed ${N(e.pct)}% and looted ${price(e.g,'gold')} and ${price(e.d,'dates')} · ${e.tro<0?'−'+N(-e.tro):'+'+N(e.tro)} trophies`):TX(`صدّت دفاعاتك الهجوم · +${N(e.tro)} كأس`,`Your defenses held · +${N(e.tro)} trophies`),e.stars&&!e.rev?btn('revenge:'+i,TX('انتقم','Revenge'),armyHs()>0,'primary',TX('غنائم أكبر مما نهب','Bigger loot than they took')):'')).join(''):TX('<p>لم يهاجمك أحد بعد. الغارات تحدث فقط وأنت خارج اللعبة.</p>','<p>Nobody has attacked you yet. Raids only happen while you are away.</p>');
+    return wrap(TX('سجل الدفاع','Defense log'),h);},
+  settings:()=>wrap(TX('الإعدادات','Settings'),row(TX('اللغة','Language'),'',TX('العربية هي اللغة الحالية','English is the current language'),btn('lang',TX('English','العربية'),true))+row(TX('الصوت','Sound'),'',muted?TX('مكتوم','Muted'):TX('رياح ومؤثرات فقط، بلا موسيقى','Wind and effects only, no music'),btn('mute',muted?TX('شغّل','On'):TX('اكتم','Mute'),true))+
+    row(TX('سرعة المؤقتات','Timer speed'),'',S.slow?TX('واقعية: أبطأ ١٢ مرة، أقرب لإحساس اللعبة الحقيقية','Realistic: 12x slower, closer to the real game feel'):TX('سريعة للتجربة','Fast for testing'),btn('speed',S.slow?TX('اجعلها سريعة','Make fast'):TX('اجعلها واقعية','Make realistic'),true))+
+    row(TX('ملء الشاشة','Full screen'),'',TX('يعمل على الكمبيوتر وأندرويد','Works on computers and Android'),btn('fs',TX('ملء الشاشة','Full screen'),true))+
+    TX(`<h3 class="sub">نسخة احتياطية</h3><p>تقدمك محفوظ في هذا المتصفح فقط. انسخ الرمز واحفظه، ثم الصقه هنا لاستعادة تقدمك على أي جهاز.</p><textarea class="code" id="saveCode" aria-label="رمز الحفظ" spellcheck="false"></textarea><div class="sh-a">${btn('export',TX('انسخ رمز تقدمي','Copy my progress code'),true,'primary')}${btn('import',TX('استعد من الرمز','Restore from code'),true)}</div>`,`<h3 class="sub">Backup</h3><p>Your progress is saved in this browser only. Copy the code and keep it, then paste it here to restore your progress on any device.</p><textarea class="code" id="saveCode" aria-label="Save code" spellcheck="false"></textarea><div class="sh-a">${btn('export',TX('انسخ رمز تقدمي','Copy my progress code'),true,'primary')}${btn('import',TX('استعد من الرمز','Restore from code'),true)}</div>`)+
+    TX(`<h3 class="sub">تقرير التجربة</h3><p>إذا كنت تجرّب اللعبة لنا: اضغط الزر، ثم الصق التقرير وأرسله لصاحب اللعبة. لا يحتوي أي معلومات شخصية، فقط تقدمك في اللعبة.</p><div class="sh-a">${btn('report',TX('انسخ تقرير التجربة','Copy playtest report'),true,'primary')}</div>`,`<h3 class="sub">Playtest report</h3><p>If you are testing the game for us: tap the button, then paste the report and send it to the game's owner. It has no personal information, only your game progress.</p><div class="sh-a">${btn('report',TX('انسخ تقرير التجربة','Copy playtest report'),true,'primary')}</div>`)+
+    TX(`<h3 class="sub">البداية من جديد</h3>`,`<h3 class="sub">Start over</h3>`)+(resetArmed?row(TX('هل أنت متأكد؟','Are you sure?'),'',TX('سيُحذف كل تقدمك نهائياً من هذا المتصفح.','All your progress will be deleted from this browser for good.'),`<div class="pm">${btn('reset2',TX('احذف','Delete'),true,'primary')}${btn('reset0',TX('تراجع','Cancel'),true)}</div>`):row(TX('امسح التقدم','Wipe progress'),'',TX('يحذف القرية والموارد والإنجازات.','Deletes the village, resources and achievements.'),btn('reset1',TX('امسح','Wipe'),true)))),
   armory:()=>{const next=WPN[S.wIdx+1];const hl=S.heroL,hm=heroMax();let hh;
-    if(S.heroEnd){const rem=(S.heroEnd-Date.now())/1000;hh=row(L(`القائد · مستوى ${N(hl)}`,`Commander · level ${N(hl)}`),L('يتدرّب','Training'),L(`ينتهي خلال ${fmtT(rem)}`,`Done in ${fmtT(rem)}`),btn('finhero',L('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',L(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)),'on');}
-    else if(hl<hm){const c=heroCost(hl);hh=row(L(`القائد · مستوى ${N(hl)}`,`Commander · level ${N(hl)}`),L(`الحد الحالي ${N(hm)}`,`Current cap ${N(hm)}`),L('كل مستوى: صحة وضرر +١٢٪ في الغارات، وضرر +٨٪ في الحصار.','Each level: +12% health and damage in raids, +8% damage in the siege.'),btn('uphero',L('درّبه','Train him'),S.dates>=c&&freeB()>0,'primary',upReason('dates',c)||`${price(c,'dates')} · ${fmtT(heroTime(hl))}`));}
-    else hh=row(L(`القائد · مستوى ${N(hl)}`,`Commander · level ${N(hl)}`),'',hl>=10?L('وصل إلى أعلى مستوى.','Max level reached.'):L('طوّر القاعة الكبرى لرفع حد القائد.','Upgrade the Great Hall to raise the Commander\'s cap.'),'');
-    let h=hh+L(`<div class="big"><span class="lbl2">مجموع الغزاة الذين أسقطتهم في الحصار</span><strong>${N(S.kills)}</strong><span class="lbl2">${next?L(`باقٍ ${N(next.kills-S.kills)} على ${next.n}`,`${N(next.kills-S.kills)} more to ${next.n}`):L('فتحت كل الأسلحة','All weapons unlocked')}</span></div>`,`<div class="big"><span class="lbl2">Total invaders you defeated in the siege</span><strong>${N(S.kills)}</strong><span class="lbl2">${next?L(`باقٍ ${N(next.kills-S.kills)} على ${next.n}`,`${N(next.kills-S.kills)} more to ${next.n}`):L('فتحت كل الأسلحة','All weapons unlocked')}</span></div>`);
+    if(S.heroEnd){const rem=(S.heroEnd-Date.now())/1000;hh=row(TX(`القائد · مستوى ${N(hl)}`,`Commander · level ${N(hl)}`),TX('يتدرّب','Training'),TX(`ينتهي خلال ${fmtT(rem)}`,`Done in ${fmtT(rem)}`),btn('finhero',TX('أنهِ الآن','Finish now'),S.pearl>=pearlsFor(rem),'pearl',TX(`${N(pearlsFor(rem))} لؤلؤ`,`${N(pearlsFor(rem))} pearls`)),'on');}
+    else if(hl<hm){const c=heroCost(hl);hh=row(TX(`القائد · مستوى ${N(hl)}`,`Commander · level ${N(hl)}`),TX(`الحد الحالي ${N(hm)}`,`Current cap ${N(hm)}`),TX('كل مستوى: صحة وضرر +١٢٪ في الغارات، وضرر +٨٪ في الحصار.','Each level: +12% health and damage in raids, +8% damage in the siege.'),btn('uphero',TX('درّبه','Train him'),S.dates>=c&&freeB()>0,'primary',upReason('dates',c)||`${price(c,'dates')} · ${fmtT(heroTime(hl))}`));}
+    else hh=row(TX(`القائد · مستوى ${N(hl)}`,`Commander · level ${N(hl)}`),'',hl>=10?TX('وصل إلى أعلى مستوى.','Max level reached.'):TX('طوّر القاعة الكبرى لرفع حد القائد.','Upgrade the Great Hall to raise the Commander\'s cap.'),'');
+    let h=hh+TX(`<div class="big"><span class="lbl2">مجموع الغزاة الذين أسقطتهم في الحصار</span><strong>${N(S.kills)}</strong><span class="lbl2">${next?TX(`باقٍ ${N(next.kills-S.kills)} على ${next.n}`,`${N(next.kills-S.kills)} more to ${next.n}`):TX('فتحت كل الأسلحة','All weapons unlocked')}</span></div>`,`<div class="big"><span class="lbl2">Total invaders you defeated in the siege</span><strong>${N(S.kills)}</strong><span class="lbl2">${next?TX(`باقٍ ${N(next.kills-S.kills)} على ${next.n}`,`${N(next.kills-S.kills)} more to ${next.n}`):TX('فتحت كل الأسلحة','All weapons unlocked')}</span></div>`);
     h+=WPN.map(w=>{const open=S.kills>=w.kills,on=S.weapon===w.id;
-      return row(w.n,open?(on?L('مجهّز','Equipped'):L('مفتوح','Unlocked')):L(`يُفتح عند ${N(w.kills)} قتيل`,`Unlocks at ${N(w.kills)} kills`),w.d,open?btn('eq:'+w.id,on?L('مجهّز','Equipped'):L('جهّز','Equip'),!on):`<div class="prog"><i style="width:${Math.min(100,S.kills/w.kills*100)}%"></i></div>`,`${on?'on':''} ${open?'':'locked'}`);}).join('');
-    h+=L('<h3 class="sub">الدوريات</h3>','<h3 class="sub">Leagues</h3>')+LEAGUES.map(l=>row(l[1],L(`من ${N(l[0])} كأس`,`From ${N(l[0])} trophies`),'',league()===l[1]?L('<span class="timer">دوريك</span>','<span class="timer">Your league</span>'):'',league()===l[1]?'on':'')).join('');
-    return wrap(L('الأسلحة والدوريات','Weapons and leagues'),h);},
-  builders:()=>{const now=Date.now();const jobs=[];if(S.hall.end)jobs.push([L('القاعة الكبرى','Great Hall'),S.hall.end]);if(S.heroEnd)jobs.push([L('تدريب القائد','Commander training'),S.heroEnd]);if(S.wallEnd)jobs.push([L('أسوار الحصن','Fort Walls'),S.wallEnd]);S.plots.forEach(p=>{if(p&&p.end)jobs.push([B[p.t].n,p.end]);});
-    let h=L(`<div class="big"><span class="lbl2">البنّاؤون</span><strong>${N(freeB())} متاح من ${N(S.builders)}</strong></div>`,`<div class="big"><span class="lbl2">Builders</span><strong>${N(freeB())} free of ${N(S.builders)}</strong></div>`);
-    h+=jobs.length?jobs.map(j=>row(j[0],'',L(`ينتهي خلال ${fmtT((j[1]-now)/1000)}`,`Done in ${fmtT((j[1]-now)/1000)}`),'')).join(''):L('<p>كل البنّائين بلا عمل. اضغط مبنى لتطويره.</p>','<p>All builders are idle. Tap a building to upgrade it.</p>');
-    if(S.builders<4){const c=BUILDER_COST[S.builders+1];h+=row(L('بنّاء إضافي','Extra builder'),'',L(`كل بنّاء يسمح بتطوير مبنى إضافي في الوقت نفسه.`,`Each builder lets you upgrade one more building at the same time.`),btn('buyb',L('اشترِ','Buy'),S.pearl>=c,'pearl',L(`${N(c)} لؤلؤ`,`${N(c)} pearls`)));}
-    return wrap(L('البنّاؤون','Builders'),h);},
-  result:()=>{const r=lastRes;return L(`<div class="panel center"><h2>${r.stars?L('انتصار','Victory'):L('هزيمة','Defeat')}</h2><p>${r.name}</p><div class="bigstars">${starsHTML(r.stars)}</div>
+      return row(w.n,open?(on?TX('مجهّز','Equipped'):TX('مفتوح','Unlocked')):TX(`يُفتح عند ${N(w.kills)} قتيل`,`Unlocks at ${N(w.kills)} kills`),w.d,open?btn('eq:'+w.id,on?TX('مجهّز','Equipped'):TX('جهّز','Equip'),!on):`<div class="prog"><i style="width:${Math.min(100,S.kills/w.kills*100)}%"></i></div>`,`${on?'on':''} ${open?'':'locked'}`);}).join('');
+    h+=TX('<h3 class="sub">الدوريات</h3>','<h3 class="sub">Leagues</h3>')+LEAGUES.map(l=>row(l[1],TX(`من ${N(l[0])} كأس`,`From ${N(l[0])} trophies`),'',league()===l[1]?TX('<span class="timer">دوريك</span>','<span class="timer">Your league</span>'):'',league()===l[1]?'on':'')).join('');
+    return wrap(TX('الأسلحة والدوريات','Weapons and leagues'),h);},
+  builders:()=>{const now=Date.now();const jobs=[];if(S.hall.end)jobs.push([TX('القاعة الكبرى','Great Hall'),S.hall.end]);if(S.heroEnd)jobs.push([TX('تدريب القائد','Commander training'),S.heroEnd]);if(S.wallEnd)jobs.push([TX('أسوار الحصن','Fort Walls'),S.wallEnd]);S.plots.forEach(p=>{if(p&&p.end)jobs.push([B[p.t].n,p.end]);});
+    let h=TX(`<div class="big"><span class="lbl2">البنّاؤون</span><strong>${N(freeB())} متاح من ${N(S.builders)}</strong></div>`,`<div class="big"><span class="lbl2">Builders</span><strong>${N(freeB())} free of ${N(S.builders)}</strong></div>`);
+    h+=jobs.length?jobs.map(j=>row(j[0],'',TX(`ينتهي خلال ${fmtT((j[1]-now)/1000)}`,`Done in ${fmtT((j[1]-now)/1000)}`),'')).join(''):TX('<p>كل البنّائين بلا عمل. اضغط مبنى لتطويره.</p>','<p>All builders are idle. Tap a building to upgrade it.</p>');
+    if(S.builders<4){const c=BUILDER_COST[S.builders+1];h+=row(TX('بنّاء إضافي','Extra builder'),'',TX(`كل بنّاء يسمح بتطوير مبنى إضافي في الوقت نفسه.`,`Each builder lets you upgrade one more building at the same time.`),btn('buyb',TX('اشترِ','Buy'),S.pearl>=c,'pearl',TX(`${N(c)} لؤلؤ`,`${N(c)} pearls`)));}
+    return wrap(TX('البنّاؤون','Builders'),h);},
+  result:()=>{const r=lastRes;return TX(`<div class="panel center"><h2>${r.stars?TX('انتصار','Victory'):TX('هزيمة','Defeat')}</h2><p>${r.name}</p><div class="bigstars">${starsHTML(r.stars)}</div>
     <div class="stats"><div><b>${N(r.pct)}٪</b><span>الدمار</span></div><div><b>${N(r.g)}</b><span>ذهب</span></div><div><b>${N(r.d)}</b><span>تمر</span></div></div>
-    <p>${r.tro>0?L(`+${N(r.tro)} كأس`,`+${N(r.tro)} trophies`):r.tro<0?L(`−${N(-r.tro)} كأس`,`−${N(-r.tro)} trophies`):L('لا تغيير في الكؤوس','No trophy change')}${r.pearl?L(` · +${N(r.pearl)} لؤلؤ`,` · +${N(r.pearl)} pearls`):''}${r.lost>0?L(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}</p>${btn('home',L('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`,`<div class="panel center"><h2>${r.stars?L('انتصار','Victory'):L('هزيمة','Defeat')}</h2><p>${r.name}</p><div class="bigstars">${starsHTML(r.stars)}</div>
+    <p>${r.tro>0?TX(`+${N(r.tro)} كأس`,`+${N(r.tro)} trophies`):r.tro<0?TX(`−${N(-r.tro)} كأس`,`−${N(-r.tro)} trophies`):TX('لا تغيير في الكؤوس','No trophy change')}${r.pearl?TX(` · +${N(r.pearl)} لؤلؤ`,` · +${N(r.pearl)} pearls`):''}${r.lost>0?TX(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}</p>${btn('home',TX('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`,`<div class="panel center"><h2>${r.stars?TX('انتصار','Victory'):TX('هزيمة','Defeat')}</h2><p>${r.name}</p><div class="bigstars">${starsHTML(r.stars)}</div>
     <div class="stats"><div><b>${N(r.pct)}%</b><span>Destroyed</span></div><div><b>${N(r.g)}</b><span>Gold</span></div><div><b>${N(r.d)}</b><span>Dates</span></div></div>
-    <p>${r.tro>0?L(`+${N(r.tro)} كأس`,`+${N(r.tro)} trophies`):r.tro<0?L(`−${N(-r.tro)} كأس`,`−${N(-r.tro)} trophies`):L('لا تغيير في الكؤوس','No trophy change')}${r.pearl?L(` · +${N(r.pearl)} لؤلؤ`,` · +${N(r.pearl)} pearls`):''}${r.lost>0?L(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}</p>${btn('home',L('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`);},
-  cards:()=>L(`<div class="panel center"><h2>صمدت الليلة ${N(G.night)}</h2><p>غنائم الحصار حتى الآن: ${price(G.loot.gold,'gold')} و${price(G.loot.dates,'dates')}. إن سقطت البوابة تخسر ٣٠٪ منها.</p>
-    <p>اختر ترقية وواصل، أو انسحب الآن بكل الغنائم.</p><div class="cards">${G.pick.map((c,i)=>`<button class="card" data-a="card:${i}"><b>${c.n}</b><span>${c.d}</span></button>`).join('')}</div>${btn('retreat',L('انسحب بكل الغنائم','Retreat with all the loot'),true)}</div>`,`<div class="panel center"><h2>You survived night ${N(G.night)}</h2><p>Siege loot so far: ${price(G.loot.gold,'gold')} and ${price(G.loot.dates,'dates')}. If the gate falls you lose 30% of it.</p>
-    <p>Pick an upgrade and keep going, or retreat now with all the loot.</p><div class="cards">${G.pick.map((c,i)=>`<button class="card" data-a="card:${i}"><b>${c.n}</b><span>${c.d}</span></button>`).join('')}</div>${btn('retreat',L('انسحب بكل الغنائم','Retreat with all the loot'),true)}</div>`),
-  siegeEnd:()=>{const r=lastSiege;return L(`<div class="panel center"><h2>${r.retreat?L('انسحاب ناجح','Retreat successful'):r.record?L('رقم قياسي جديد','New record'):L('سقطت البوابة','The gate fell')}</h2>
+    <p>${r.tro>0?TX(`+${N(r.tro)} كأس`,`+${N(r.tro)} trophies`):r.tro<0?TX(`−${N(-r.tro)} كأس`,`−${N(-r.tro)} trophies`):TX('لا تغيير في الكؤوس','No trophy change')}${r.pearl?TX(` · +${N(r.pearl)} لؤلؤ`,` · +${N(r.pearl)} pearls`):''}${r.lost>0?TX(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}</p>${btn('home',TX('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`);},
+  cards:()=>TX(`<div class="panel center"><h2>صمدت الليلة ${N(G.night)}</h2><p>غنائم الحصار حتى الآن: ${price(G.loot.gold,'gold')} و${price(G.loot.dates,'dates')}. إن سقطت البوابة تخسر ٣٠٪ منها.</p>
+    <p>اختر ترقية وواصل، أو انسحب الآن بكل الغنائم.</p><div class="cards">${G.pick.map((c,i)=>`<button class="card" data-a="card:${i}"><b>${c.n}</b><span>${c.d}</span></button>`).join('')}</div>${btn('retreat',TX('انسحب بكل الغنائم','Retreat with all the loot'),true)}</div>`,`<div class="panel center"><h2>You survived night ${N(G.night)}</h2><p>Siege loot so far: ${price(G.loot.gold,'gold')} and ${price(G.loot.dates,'dates')}. If the gate falls you lose 30% of it.</p>
+    <p>Pick an upgrade and keep going, or retreat now with all the loot.</p><div class="cards">${G.pick.map((c,i)=>`<button class="card" data-a="card:${i}"><b>${c.n}</b><span>${c.d}</span></button>`).join('')}</div>${btn('retreat',TX('انسحب بكل الغنائم','Retreat with all the loot'),true)}</div>`),
+  siegeEnd:()=>{const r=lastSiege;return TX(`<div class="panel center"><h2>${r.retreat?TX('انسحاب ناجح','Retreat successful'):r.record?TX('رقم قياسي جديد','New record'):TX('سقطت البوابة','The gate fell')}</h2>
     <div class="stats"><div><b>${N(r.nights)}</b><span>ليالٍ صمدتها</span></div><div><b>${N(r.kills)}</b><span>قتيلاً</span></div><div><b>${N(r.g+r.d)}</b><span>غنائم</span></div></div>
-    <p>${price(r.g,'gold')} و${price(r.d,'dates')}${r.retreat?'':L(' بعد خسارة ٣٠٪',' after losing 30%')}${r.lost>0?L(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}.</p>
-    <p>${WPN[S.wIdx+1]?L(`باقٍ ${N(WPN[S.wIdx+1].kills-S.kills)} قتيلاً على ${WPN[S.wIdx+1].n}.`,`${N(WPN[S.wIdx+1].kills-S.kills)} kills to go for ${WPN[S.wIdx+1].n}.`):L('فتحت كل الأسلحة.','All weapons unlocked.')}</p>${btn('home',L('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`,`<div class="panel center"><h2>${r.retreat?L('انسحاب ناجح','Retreat successful'):r.record?L('رقم قياسي جديد','New record'):L('سقطت البوابة','The gate fell')}</h2>
+    <p>${price(r.g,'gold')} و${price(r.d,'dates')}${r.retreat?'':TX(' بعد خسارة ٣٠٪',' after losing 30%')}${r.lost>0?TX(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}.</p>
+    <p>${WPN[S.wIdx+1]?TX(`باقٍ ${N(WPN[S.wIdx+1].kills-S.kills)} قتيلاً على ${WPN[S.wIdx+1].n}.`,`${N(WPN[S.wIdx+1].kills-S.kills)} kills to go for ${WPN[S.wIdx+1].n}.`):TX('فتحت كل الأسلحة.','All weapons unlocked.')}</p>${btn('home',TX('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`,`<div class="panel center"><h2>${r.retreat?TX('انسحاب ناجح','Retreat successful'):r.record?TX('رقم قياسي جديد','New record'):TX('سقطت البوابة','The gate fell')}</h2>
     <div class="stats"><div><b>${N(r.nights)}</b><span>Nights survived</span></div><div><b>${N(r.kills)}</b><span>Kills</span></div><div><b>${N(r.g+r.d)}</b><span>Loot</span></div></div>
-    <p>${price(r.g,'gold')} and ${price(r.d,'dates')}${r.retreat?'':L(' بعد خسارة ٣٠٪',' after losing 30%')}${r.lost>0?L(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}.</p>
-    <p>${WPN[S.wIdx+1]?L(`باقٍ ${N(WPN[S.wIdx+1].kills-S.kills)} قتيلاً على ${WPN[S.wIdx+1].n}.`,`${N(WPN[S.wIdx+1].kills-S.kills)} kills to go for ${WPN[S.wIdx+1].n}.`):L('فتحت كل الأسلحة.','All weapons unlocked.')}</p>${btn('home',L('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`);}};
+    <p>${price(r.g,'gold')} and ${price(r.d,'dates')}${r.retreat?'':TX(' بعد خسارة ٣٠٪',' after losing 30%')}${r.lost>0?TX(` · ضاع ${N(r.lost)} لأن مخازنك ممتلئة`,` · lost ${N(r.lost)} because your storages are full`):''}.</p>
+    <p>${WPN[S.wIdx+1]?TX(`باقٍ ${N(WPN[S.wIdx+1].kills-S.kills)} قتيلاً على ${WPN[S.wIdx+1].n}.`,`${N(WPN[S.wIdx+1].kills-S.kills)} kills to go for ${WPN[S.wIdx+1].n}.`):TX('فتحت كل الأسلحة.','All weapons unlocked.')}</p>${btn('home',TX('العودة إلى الحصن','Back to the fort'),true,'primary')}</div>`);}};
 
 /* =================== siege =================== */
 const FOES={
@@ -1011,14 +1011,14 @@ const G={phase:'idle',night:1,survived:0,gate:0,gateMax:0,kills:0,bossKills:0,cm
 let lastSiege=null;
 const oilPool=new THREE.Mesh(new THREE.CircleGeometry(1,32),new THREE.MeshBasicMaterial({color:0xff7a20,transparent:true,opacity:0}));oilPool.rotation.x=-Math.PI/2;oilPool.position.set(0,.08,FZ+H+2.5);vRoot.add(oilPool);let oilT=0;
 const CARDS=[
-  {n:L('سهام حادة','Sharp arrows'),d:L('ضرر القائد +١','Commander damage +1'),f:()=>G.cmdBonus+=1},
-  {n:L('رماة مدرّبون','Trained archers'),d:L('سرعة الأبراج +٢٥٪','Tower speed +25%'),f:()=>G.towerRate*=1.25},
-  {n:L('ترميم البوابة','Repair the gate'),d:L('تستعيد ٦٠ صموداً','Restores 60 gate strength'),f:()=>G.gate=Math.min(G.gateMax,G.gate+60)},
-  {n:L('قافلة إمداد','Supply caravan'),d:L('+١٥٠ ذهب و+١٢٠ تمر للغنائم','+150 gold and +120 dates to the loot'),f:()=>{G.loot.gold+=150;G.loot.dates+=120;}},
-  {n:L('مرجل أكبر','Bigger cauldron'),d:L('ضرر الزيت +٥ وتبريد أسرع','Oil damage +5 and faster cooldown'),f:()=>{G.oilDmg+=5;G.oilCd=Math.max(7,G.oilCd-3);}},
-  {n:L('بوابة مدعّمة','Reinforced gate'),d:L('أقصى صمود +٤٠','Max gate strength +40'),f:()=>{G.gateMax+=40;G.gate+=40;}},
-  {n:L('وابل مشتعل','Burning volley'),d:L('ضرر الوابل +٢','Volley damage +2'),f:()=>G.volleyDmg+=2},
-  {n:L('دم حار','Hot blood'),d:L('غضب القائد ممتلئ الآن','Commander rage is full now'),f:()=>G.rage=100}];
+  {n:TX('سهام حادة','Sharp arrows'),d:TX('ضرر القائد +١','Commander damage +1'),f:()=>G.cmdBonus+=1},
+  {n:TX('رماة مدرّبون','Trained archers'),d:TX('سرعة الأبراج +٢٥٪','Tower speed +25%'),f:()=>G.towerRate*=1.25},
+  {n:TX('ترميم البوابة','Repair the gate'),d:TX('تستعيد ٦٠ صموداً','Restores 60 gate strength'),f:()=>G.gate=Math.min(G.gateMax,G.gate+60)},
+  {n:TX('قافلة إمداد','Supply caravan'),d:TX('+١٥٠ ذهب و+١٢٠ تمر للغنائم','+150 gold and +120 dates to the loot'),f:()=>{G.loot.gold+=150;G.loot.dates+=120;}},
+  {n:TX('مرجل أكبر','Bigger cauldron'),d:TX('ضرر الزيت +٥ وتبريد أسرع','Oil damage +5 and faster cooldown'),f:()=>{G.oilDmg+=5;G.oilCd=Math.max(7,G.oilCd-3);}},
+  {n:TX('بوابة مدعّمة','Reinforced gate'),d:TX('أقصى صمود +٤٠','Max gate strength +40'),f:()=>{G.gateMax+=40;G.gate+=40;}},
+  {n:TX('وابل مشتعل','Burning volley'),d:TX('ضرر الوابل +٢','Volley damage +2'),f:()=>G.volleyDmg+=2},
+  {n:TX('دم حار','Hot blood'),d:TX('غضب القائد ممتلئ الآن','Commander rage is full now'),f:()=>G.rage=100}];
 const XDEF={ballista:1,barjeel:1,falcon:1,mirror:1,sand:1};
 /* new defenses. raid=true gives raid numbers (troops have 35..900 HP), false gives night-siege numbers (foes have 2.5..80 HP) */
 function xStat(t,l,raid){switch(t){
@@ -1028,11 +1028,11 @@ function xStat(t,l,raid){switch(t){
   case 'mirror':return raid?{range:8,dps:10+5*l,max:4}:{range:12,dps:.5+.25*l,max:4};
   case 'sand':return raid?{range:2.8,slow:.35,st:4,dmg:25+12*l}:{range:3,slow:.35,st:4,dmg:.5+.3*l,rearm:10};}}
 function xStatTxt(t,l){const s=xStat(t,l,false);switch(t){
-  case 'ballista':return L(`اختراق ${D1(s.dmg)} · ${D1(s.rate)} طلقة في الثانية · المدى ${N(s.range)}`,`Pierce ${D1(s.dmg)} · ${D1(s.rate)} shots/s · range ${N(s.range)}`);
-  case 'barjeel':return L(`عصفة كل ${D1(s.cd)}ث · دفع وإبطاء ٥٠٪ · نصف القطر ${D1(s.range)}`,`Gust every ${D1(s.cd)}s · push + 50% slow · radius ${D1(s.range)}`);
-  case 'falcon':return L(`انقضاض ${D1(s.dmg)} كل ${D1(s.cd)}ث على أقوى عدو · المدى ${N(s.range)}`,`Dive ${D1(s.dmg)} every ${D1(s.cd)}s on the strongest foe · range ${N(s.range)}`);
-  case 'mirror':return L(`حرارة ${D1(s.dps)} في الثانية تتضاعف حتى ×٤ · المدى ${N(s.range)}`,`Heat ${D1(s.dps)}/s ramping up to x4 · range ${N(s.range)}`);
-  case 'sand':return L(`يبطئ ٦٥٪ لمدة ٤ث ويجرح ${D1(s.dmg)} · يعود بعد ${N(s.rearm)}ث`,`Slows 65% for 4s, hits ${D1(s.dmg)} · re-arms in ${N(s.rearm)}s`);}}
+  case 'ballista':return TX(`اختراق ${D1(s.dmg)} · ${D1(s.rate)} طلقة في الثانية · المدى ${N(s.range)}`,`Pierce ${D1(s.dmg)} · ${D1(s.rate)} shots/s · range ${N(s.range)}`);
+  case 'barjeel':return TX(`عصفة كل ${D1(s.cd)}ث · دفع وإبطاء ٥٠٪ · نصف القطر ${D1(s.range)}`,`Gust every ${D1(s.cd)}s · push + 50% slow · radius ${D1(s.range)}`);
+  case 'falcon':return TX(`انقضاض ${D1(s.dmg)} كل ${D1(s.cd)}ث على أقوى عدو · المدى ${N(s.range)}`,`Dive ${D1(s.dmg)} every ${D1(s.cd)}s on the strongest foe · range ${N(s.range)}`);
+  case 'mirror':return TX(`حرارة ${D1(s.dps)} في الثانية تتضاعف حتى ×٤ · المدى ${N(s.range)}`,`Heat ${D1(s.dps)}/s ramping up to x4 · range ${N(s.range)}`);
+  case 'sand':return TX(`يبطئ ٦٥٪ لمدة ٤ث ويجرح ${D1(s.dmg)} · يعود بعد ${N(s.rearm)}ث`,`Slows 65% for 4s, hits ${D1(s.dmg)} · re-arms in ${N(s.rearm)}s`);}}
 function segDist(px,pz,ax,az,bx,bz){const vx=bx-ax,vz=bz-az,l2=vx*vx+vz*vz||1;let k=((px-ax)*vx+(pz-az)*vz)/l2;k=clamp(k,0,1);return Math.hypot(px-(ax+vx*k),pz-(az+vz*k));}
 /* night siege: player's new towers vs foes */
 function siegeX(tw,dt){const st=xStat(tw.t,tw.l,false),u=bud(tw.i);const pos=e=>e.mesh.position;
@@ -1069,27 +1069,27 @@ function raidTraps(dt){if(!R.traps)return;R.traps.forEach(tr=>{if(tr.used)return
   const near=R.troops.filter(o=>o.alive&&Math.hypot(o.mesh.position.x-tr.x,o.mesh.position.z-tr.z)<st.range);if(!near.length)return;tr.used=true;
   R.troops.forEach(o=>{if(o.alive&&Math.hypot(o.mesh.position.x-tr.x,o.mesh.position.z-tr.z)<st.range+.6){o.slowT=st.st;o.slowK=st.slow;hurtTroop(o,st.dmg);}});
   const m=makeB('sand',tr.lv,true);m.position.set(tr.x,0,tr.z);rRoot.add(m);tr.mesh=m;ringFx(tr.x,tr.z,st.range,0xc9a066,1);burst({x:tr.x,y:-.5,z:tr.z},0xc9a066,10);sfx('thud');
-  floatTxt({x:tr.x,z:tr.z},L('فخ!','Trap!'),'#f2c14e');});}
+  floatTxt({x:tr.x,z:tr.z},TX('فخ!','Trap!'),'#f2c14e');});}
 function tStatRaw(t,L){if(t==='archer')return{range:11+L,rate:.8+.25*L,dmg:1+.35*(L-1)};if(t==='cat')return{range:17,rate:.28+.06*L,dmg:3+1.3*L,splash:2.6};return{range:7.5+.8*L,rate:.8,dmg:.4,burn:1+.7*L,splash:3};}
 function startSiege(){closePanel();closeSheet();placing=null;mode='siege';const gm=gateHP();
   Object.assign(G,{phase:'ready',night:1,survived:0,gate:gm,gateMax:gm,kills:0,bossKills:0,cmdBonus:0,towerRate:1,oilDmg:7,oilCd:15,volleyDmg:3,rage:0,raging:0,queue:[],armed:null,cd:{shot:0,volley:0,oil:0},loot:{gold:0,dates:0}});
   towers=[];S.plots.forEach((p,i)=>{if(p&&p.l>0&&!p.end&&B[p.t].kind==='def')towers.push({i,t:p.t,l:p.l,x:PL[i].x,z:PL[i].z,cd:0,kick:0});});
-  frameView('siege');setHud();hint(towers.length?L(`${N(towers.length)} برج جاهز للدفاع. اضغط «ابدأ الليل»`,`${N(towers.length)} towers ready to defend. Tap "Start the night"`):L('لا توجد أبراج جاهزة! ستدافع وحدك','No towers ready! You will defend alone'));}
+  frameView('siege');setHud();hint(towers.length?TX(`${N(towers.length)} برج جاهز للدفاع. اضغط «ابدأ الليل»`,`${N(towers.length)} towers ready to defend. Tap "Start the night"`):TX('لا توجد أبراج جاهزة! ستدافع وحدك','No towers ready! You will defend alone'));}
 function waveList(n){const L=[];const gap=Math.max(.45,.85-n*.025);
   for(let i=0;i<Math.min(32,5+n*3);i++)L.push({t:'foot',gap});
   const ins=(t,c,g)=>{for(let i=0;i<c;i++)L.splice(Math.floor(rand(2,L.length)),0,{t,gap:g});};
   if(n>=2)ins('rider',Math.min(16,n*2),.55);if(n>=3)ins('shield',Math.min(14,(n-2)*2),.9);
   if(n>=4)for(let i=0;i<Math.min(6,n-3);i++)L.push({t:'ram',gap:2});if(n%5===0)L.push({t:'boss',gap:3});return L;}
-function startNight(){if(G.phase!=='ready')return;G.phase='battle';G.queue=waveList(G.night);G.spawnT=1;sfx('horn');hint(G.night%5===0?L('ليلة الزعيم: احتفظ بغضب القائد له','Boss night: save the Commander\'s rage for him'):L('اضغط على الغزاة ليطلق القائد سهامه','Tap the invaders so the Commander fires his arrows'));}
+function startNight(){if(G.phase!=='ready')return;G.phase='battle';G.queue=waveList(G.night);G.spawnT=1;sfx('horn');hint(G.night%5===0?TX('ليلة الزعيم: احتفظ بغضب القائد له','Boss night: save the Commander\'s rage for him'):TX('اضغط على الغزاة ليطلق القائد سهامه','Tap the invaders so the Commander fires his arrows'));}
 function spawnFoe(type){const T=FOES[type];const mesh=T.make();mesh.position.set(rand(-20,20),0,rand(36,42));vRoot.add(mesh);
   let hp=T.hp*(1+.14*(G.night-1))*(1+.12*(S.hall.l-1));if(type==='boss')hp=80*(1+(G.night/5-1)*.9)*(1+.12*(S.hall.l-1));
   const bar=makeBar(vRoot,type==='boss'?2.5:1.2,T.bar);
   foes.push({type,T,mesh,bar,hp,max:hp,alive:true,dying:0,state:'walk',burn:null,target:new THREE.Vector3(rand(-2.6,2.6),0,FZ+H+1.4+T.r*.8+rand(0,1.2)),phase:Math.random()*6});
-  if(type==='boss'){toast(L('قائد الغزاة يقترب!','The invader chief is coming!'));cam.shake=.6;sfx('horn');}}
+  if(type==='boss'){toast(TX('قائد الغزاة يقترب!','The invader chief is coming!'));cam.shake=.6;sfx('horn');}}
 function nearestFoe(x,z,r,skip){let best=null,bd=r;foes.forEach(e=>{if(!e.alive||(skip&&skip.includes(e)))return;const d=Math.hypot(e.mesh.position.x-x,e.mesh.position.z-z);if(d<bd){bd=d;best=e;}});return best;}
 function hurtFoe(e,d,kind){if(!e||!e.alive)return;if(e.T.armor&&kind==='arrow')d*=.5;e.hp-=d;
   if(e.hp<=0){e.alive=false;e.dying=.45;G.kills++;S.kills++;G.loot.gold+=e.T.gold;G.loot.dates+=Math.round(e.T.gold*.8);
-    if(e.type==='boss'){G.bossKills++;cam.shake=.5;toast(L('سقط قائد الغزاة!','The invader chief has fallen!'));G.loot.gold+=150;}
+    if(e.type==='boss'){G.bossKills++;cam.shake=.5;toast(TX('سقط قائد الغزاة!','The invader chief has fallen!'));G.loot.gold+=150;}
     if(!G.raging)G.rage=Math.min(100,G.rage+4);floatTxt(e.mesh.position,'+'+N(e.T.gold));burst(e.mesh.position,0xffd27a,5);sfx('hit');checkUnlock();}}
 function splashFoes(p,r,dmg,kind,burn,main){let any=false;foes.forEach(e=>{if(!e.alive)return;if(Math.hypot(e.mesh.position.x-p.x,e.mesh.position.z-p.z)<r){any=true;hurtFoe(e,e===main?dmg:dmg*.6,kind);if(burn&&e.alive)e.burn={dps:burn,t:3};}});
   ringFx(p.x,p.z,r,burn?0xff7a20:0xd8c8a0,.45);burst(p,burn?0xff7a20:0xb8a890,5);if(kind==='stone')sfx('thud');}
@@ -1107,7 +1107,7 @@ function siegeTap(pt){if(G.phase!=='battle')return;
       else if(e.alive){if(rg)e.burn={dps:2,t:3};hurtFoe(e,dmg,fire?'fire':'arrow');if(W.chain)chain(e,W.chain,dmg*.7);}}});});sfx('bow');}
 function endNight(){G.phase='cards';G.survived=G.night;S.st.nights=(S.st.nights||0)+1;addPts(8);const boss=G.night%5===0;G.loot.gold+=40*G.night+(boss?120:0);G.loot.dates+=30*G.night+(boss?100:0);
   G.pick=[...CARDS].sort(()=>Math.random()-.5).slice(0,3);setTimeout(()=>{if(mode==='siege'&&G.phase==='cards')panel('cards');},500);}
-function pickCard(i){if(G.phase!=='cards'||!G.pick[i])return;G.pick[i].f();G.night++;G.phase='ready';closePanel();hint(G.night%5===0?L('الليلة القادمة يأتي قائد الغزاة','The invader chief comes next night'):L('استعد لليلة التالية','Get ready for the next night'));}
+function pickCard(i){if(G.phase!=='cards'||!G.pick[i])return;G.pick[i].f();G.night++;G.phase='ready';closePanel();hint(G.night%5===0?TX('الليلة القادمة يأتي قائد الغزاة','The invader chief comes next night'):TX('استعد لليلة التالية','Get ready for the next night'));}
 function endSiege(retreat){if(mode!=='siege'||G.phase==='over')return;if(retreat&&G.phase==='battle')return;
   const frac=retreat?1:.7;const g=Math.round(G.loot.gold*frac),d=Math.round(G.loot.dates*frac);const gg=addRes('gold',g),dd=addRes('dates',d);
   const record=G.survived>S.best;S.best=Math.max(S.best,G.survived);G.phase='over';
@@ -1164,7 +1164,7 @@ function genBase(level,seed,loot){const r=rng(seed);const L=[];const WR=level>=1
   return{L,wall:WR?{r:WR,lv:Math.min(5,1+Math.floor(level/3.5))}:null};}
 let bRing=null;
 function clearRaid(){if(R){R.troops.forEach(o=>{});}while(rRoot.children.length){const c=rRoot.children[0];rRoot.remove(c);disposeTree(c);}bRing=null;}
-function startRaid(spec){closePanel();closeSheet();placing=null;if(armyHs()<=0){toast(L('جيشك فارغ، درّب جنوداً أولاً','Your army is empty. Train troops first'));return;}
+function startRaid(spec){closePanel();closeSheet();placing=null;if(armyHs()<=0){toast(TX('جيشك فارغ، درّب جنوداً أولاً','Your army is empty. Train troops first'));return;}
   clearRaid();clearShots();const gb=genBase(spec.level,spec.seed,spec.loot),lay=gb.L;
   R={spec,blds:[],troops:[],walls:[],phase:'scout',scout:30,time:150,started:false,ended:false,hero:1,heroObj:null,rageUsed:false,rage:0,
     spells:{volley:1+(S.hall.l>=3?1:0),drums:S.hall.l>=2?1:0},spellMax:{},sel:null,loot:{gold:0,dates:0},destroyed:0,total:0,chief:false,drums:[],types:TORDER.filter(t=>(S.army[t]||0)>0),flash:0};
@@ -1180,14 +1180,14 @@ function startRaid(spec){closePanel();closeSheet();placing=null;if(armyHs()<=0){
   const r=rng(spec.seed+3);for(let i=0;i<12;i++){const a=r()*Math.PI*2,d=R.deployR+8+r()*10;palm(Math.cos(a)*d,Math.sin(a)*d,.8+r()*.4,rRoot);}
   for(let i=0;i<4;i++){const a=r()*Math.PI*2,d=R.deployR+4+r()*6;tent(Math.cos(a)*d,Math.sin(a)*d,.8,0xc8b898,rRoot);}
   R.sel=nextSel();mode='raid';vRoot.visible=false;rRoot.visible=true;frameView('raid');setHud();sfx('horn');cardsHTML='';
-  hint(L('استطلع المعسكر، ثم انشر جنودك خارج الحدود الحمراء. اضغط مطولاً لنشر عدة جنود','Scout the camp, then deploy troops outside the red line. Hold to deploy several troops'));}
+  hint(TX('استطلع المعسكر، ثم انشر جنودك خارج الحدود الحمراء. اضغط مطولاً لنشر عدة جنود','Scout the camp, then deploy troops outside the red line. Hold to deploy several troops'));}
 function startCamp(i){const open=i===0||(S.camps[i-1]&&S.camps[i-1].stars>0);if(!open)return;if(!S.camps[i]){const L=campLoot(i);S.camps[i]={stars:0,gold:L.gold,dates:L.dates};}
   const c=S.camps[i];startRaid({name:CAMPS[i],level:i,seed:1000+i*7,loot:{gold:c.gold,dates:c.dates},camp:i});}
-function randomRaid(){const sc=30*S.hall.l;if(S.gold<sc){toast(L('لا يكفي الذهب للبحث','Not enough gold to search'));return;}if(armyHs()<=0){toast(L('جيشك فارغ','Your army is empty'));return;}S.gold-=sc;
-  if(S.shield>Date.now()){S.shield=0;toast(L('سقط درعك لأنك هاجمت','Your shield dropped because you attacked'));}const lv=clamp(2*S.hall.l-2+Math.floor(rand(0,2)),0,17);const g=Math.round(300*Math.pow(S.hall.l,1.5)*rand(.7,1.3)/10)*10;
-  startRaid({name:L('معسكر غازٍ مجهول','Unknown invader camp'),level:lv,seed:Math.floor(Math.random()*1e9),loot:{gold:g,dates:Math.round(g*.9)},camp:null});}
+function randomRaid(){const sc=30*S.hall.l;if(S.gold<sc){toast(TX('لا يكفي الذهب للبحث','Not enough gold to search'));return;}if(armyHs()<=0){toast(TX('جيشك فارغ','Your army is empty'));return;}S.gold-=sc;
+  if(S.shield>Date.now()){S.shield=0;toast(TX('سقط درعك لأنك هاجمت','Your shield dropped because you attacked'));}const lv=clamp(2*S.hall.l-2+Math.floor(rand(0,2)),0,17);const g=Math.round(300*Math.pow(S.hall.l,1.5)*rand(.7,1.3)/10)*10;
+  startRaid({name:TX('معسكر غازٍ مجهول','Unknown invader camp'),level:lv,seed:Math.floor(Math.random()*1e9),loot:{gold:g,dates:Math.round(g*.9)},camp:null});}
 function nextSel(){if(!R)return null;const t=R.types.find(t=>(S.army[t]||0)>0);if(t)return t;if(R.hero)return'hero';if(R.spells.volley>0)return'volley';if(R.spells.drums>0)return'drums';return null;}
-function heroDef(){const W=weapon(),hl=1+.12*(S.heroL-1);return{n:L('القائد','Commander'),hp:(1100+180*S.wIdx)*hl,dps:(W.dmg+1)*16*(W.multi?1.6:1)*(W.chain?1.4:1)*hl,range:6.5,speed:3,tgt:'any',kind:W.chain?'bolt':W.fire?'fire':'arrow'};}
+function heroDef(){const W=weapon(),hl=1+.12*(S.heroL-1);return{n:TX('القائد','Commander'),hp:(1100+180*S.wIdx)*hl,dps:(W.dmg+1)*16*(W.multi?1.6:1)*(W.chain?1.4:1)*hl,range:6.5,speed:3,tgt:'any',kind:W.chain?'bolt':W.fire?'fire':'arrow'};}
 function troopMesh(t){let g;
   if(t==='sword'){g=person(0x2d4a7b,0x8a8f99);box(.08,.9,.08,0xc8ccd4,.45,1.2,.3,g);box(.1,.6,.5,0x6b3b22,-.42,1,.05,g);}
   else if(t==='archer'){g=person(0x2f6b4a,0x6b4a2a);cyl(.04,.04,1.3,0x5a3a20,5,.45,1.1,.1,g);}
@@ -1201,23 +1201,23 @@ function spawnTroop(t,pt){const def=t==='hero'?heroDef():TR[t];const mul=t==='he
   R.troops.push(o);if(t==='hero')R.heroObj=o;R.dep=(R.dep||0)+(t==='hero'?0:TR[t].hs);if(!R.started)hint('');R.started=true;R.phase='battle';sfx('deploy');burst(mesh.position,0xe9c58c,2);}
 function deployAt(pt){if(!R||R.ended||!pt)return;const s=R.sel;if(!s)return;
   if(s==='volley'||s==='drums'){if(R.spells[s]<=0)return;R.spells[s]--;castSpell(s,pt);if(R.spells[s]<=0)R.sel=nextSel();return;}
-  if(Math.hypot(pt.x,pt.z)<R.deployR){R.flash=1;hint(L('انشر جنودك خارج الحدود الحمراء','Deploy troops outside the red line'),1);return;}
+  if(Math.hypot(pt.x,pt.z)<R.deployR){R.flash=1;hint(TX('انشر جنودك خارج الحدود الحمراء','Deploy troops outside the red line'),1);return;}
   if(s==='hero'){if(!R.hero)return;R.hero=0;spawnTroop('hero',pt);R.sel=nextSel();return;}
   if((S.army[s]||0)<=0)return;S.army[s]--;spawnTroop(s,pt);if(!S.army[s])R.sel=nextSel();}
 function castSpell(s,pt){if(s==='volley'){sfx('volley');ringFx(pt.x,pt.z,4.5,0xf2c14e,1);
     for(let i=0;i<14;i++){const tp=new THREE.Vector3(pt.x+rand(-4,4),0,pt.z+rand(-4,4));shoot({from:new THREE.Vector3(tp.x+rand(-3,3),22,tp.z-10),pt:tp,dur:.55,arc:0,kind:'fire'});}
     setTimeout(()=>{if(!R||R.ended)return;R.blds.forEach(b=>{if(b.alive&&Math.hypot(b.x-pt.x,b.z-pt.z)<4.5+b.r*.5)dmgB(b,220+40*S.hall.l);});R.walls.forEach(w=>{if(w.alive&&Math.hypot(w.x-pt.x,w.z-pt.z)<4.5)dmgW(w,180);});cam.shake=.2;},560);}
   else{const ring=new THREE.Mesh(new THREE.RingGeometry(4.6,5,48),new THREE.MeshBasicMaterial({color:0xf08a3c,transparent:true,opacity:.6,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.set(pt.x,.1,pt.z);rRoot.add(ring);
-    R.drums.push({x:pt.x,z:pt.z,r:5,t:8,ring});sfx('rage');toast(L('طبول الحرب: الجنود داخل الدائرة أسرع وأقوى','War drums: troops inside the circle are faster and stronger'));}}
+    R.drums.push({x:pt.x,z:pt.z,r:5,t:8,ring});sfx('rage');toast(TX('طبول الحرب: الجنود داخل الدائرة أسرع وأقوى','War drums: troops inside the circle are faster and stronger'));}}
 function selCard(k){if(!R||R.ended)return;
-  if(k==='hero'&&R.heroObj&&R.heroObj.alive&&!R.rageUsed){R.rageUsed=true;R.rage=8;const h=R.heroObj;h.hp=Math.min(h.max,h.hp+h.max*.35);toast(L('غضب القائد: ضرر مضاعف وشفاء','Commander rage: double damage and healing'));sfx('rage');return;}
+  if(k==='hero'&&R.heroObj&&R.heroObj.alive&&!R.rageUsed){R.rageUsed=true;R.rage=8;const h=R.heroObj;h.hp=Math.min(h.max,h.hp+h.max*.35);toast(TX('غضب القائد: ضرر مضاعف وشفاء','Commander rage: double damage and healing'));sfx('rage');return;}
   R.sel=k;sfx('tap');}
 function pickT(o){const p=o.def.tgt;const al=R.blds.filter(b=>b.alive);if(!al.length)return null;let pool=al;
   if(p==='def'){const f=al.filter(b=>b.def);if(f.length)pool=f;}else if(p==='res'){const f=al.filter(b=>b.t==='egold'||b.t==='edates'||b.t==='chief');if(f.length)pool=f;}else if(p==='hall'){const f=al.filter(b=>b.t==='chief');if(f.length)pool=f;}
   let best=null,bd=1e9;const x=o.mesh.position.x,z=o.mesh.position.z;pool.forEach(b=>{const d=Math.hypot(b.x-x,b.z-z)-b.r;if(d<bd){bd=d;best=b;}});return best;}
 function dmgB(b,a){if(!R||!b.alive)return;const prev=b.hp;b.hp=Math.max(0,b.hp-a);const f=(prev-b.hp)/b.max;
   ['gold','dates'].forEach(r=>{if(b.loot[r]){const g=b.loot[r]*f;R.loot[r]+=g;}});
-  if(b.hp<=0){b.alive=false;R.destroyed++;if(b.t==='chief'){R.chief=true;toast(L('سقطت خيمة الزعيم!','The chief\'s tent has fallen!'));}rRoot.remove(b.mesh);disposeTree(b.mesh);b.mesh=rubble(b.x,b.z,b.r,rRoot);b.bar.g.visible=false;
+  if(b.hp<=0){b.alive=false;R.destroyed++;if(b.t==='chief'){R.chief=true;toast(TX('سقطت خيمة الزعيم!','The chief\'s tent has fallen!'));}rRoot.remove(b.mesh);disposeTree(b.mesh);b.mesh=rubble(b.x,b.z,b.r,rRoot);b.bar.g.visible=false;
     burst({x:b.x,y:.5,z:b.z},0xc8a676,10);sfx('crash');cam.shake=Math.max(cam.shake,.2);if(R.destroyed>=R.total)setTimeout(endRaid,600);}}
 function dmgW(w,a){if(!w.alive)return;w.hp-=a;if(w.hp<=0){w.alive=false;rRoot.remove(w.mesh);burst({x:w.x,y:0,z:w.z},0xb8a27a,6);sfx('crash');return;}const k=.45+.55*w.hp/w.max;w.mesh.scale.y=k;w.mesh.position.y=.55*k;}
 function hurtTroop(o,d){if(!o.alive)return;o.hp-=d;if(!o.bar&&o.hp>0)o.bar=makeBar(rRoot,1,2.6,barGreen);if(o.hp<=0){o.alive=false;o.dying=.45;burst(o.mesh.position,0x8a9ab0,4);if(o.bar)o.bar.g.visible=false;}}
@@ -1265,9 +1265,9 @@ function endRaid(){if(!R||R.ended)return;R.ended=true;if(hold){clearTimeout(hold
 function renderCards(){if(!R)return;const it=[];
   R.types.forEach(t=>it.push({k:t,n:TR[t].n,c:S.army[t]||0,txt:'×'+N(S.army[t]||0)}));
   const hAlive=R.heroObj&&R.heroObj.alive;
-  it.push(R.hero?{k:'hero',n:L('القائد','Commander'),c:1,txt:L('بطل','Hero')}:hAlive&&!R.rageUsed?{k:'hero',n:L('غضب القائد','Commander rage'),c:1,txt:L('اضغط للتفعيل','Tap to activate'),sp:1}:{k:'hero',n:L('القائد','Commander'),c:0,txt:hAlive?L('في المعركة','In battle'):L('سقط','Fallen')});
-  if(R.spellMax.volley)it.push({k:'volley',n:L('وابل السهام','Arrow volley'),c:R.spells.volley,txt:'×'+N(R.spells.volley)});
-  if(R.spellMax.drums)it.push({k:'drums',n:L('طبول الحرب','War drums'),c:R.spells.drums,txt:'×'+N(R.spells.drums)});
+  it.push(R.hero?{k:'hero',n:TX('القائد','Commander'),c:1,txt:TX('بطل','Hero')}:hAlive&&!R.rageUsed?{k:'hero',n:TX('غضب القائد','Commander rage'),c:1,txt:TX('اضغط للتفعيل','Tap to activate'),sp:1}:{k:'hero',n:TX('القائد','Commander'),c:0,txt:hAlive?TX('في المعركة','In battle'):TX('سقط','Fallen')});
+  if(R.spellMax.volley)it.push({k:'volley',n:TX('وابل السهام','Arrow volley'),c:R.spells.volley,txt:'×'+N(R.spells.volley)});
+  if(R.spellMax.drums)it.push({k:'drums',n:TX('طبول الحرب','War drums'),c:R.spells.drums,txt:'×'+N(R.spells.drums)});
   const html=it.map(i=>`<button class="tcard" data-a="sel:${i.k}" aria-pressed="${R.sel===i.k&&!i.sp}" ${i.c>0?'':'disabled'}><b>${i.n}</b><small>${i.txt}</small></button>`).join('');
   if(html!==cardsHTML){cardsHTML=html;$('#cardbar').innerHTML=html;}}
 
@@ -1288,7 +1288,7 @@ function act(a){const i=a.indexOf(':'),k=i<0?a:a.slice(0,i),v=i<0?'':a.slice(i+1
   case 'collect':collect(sheetT);break;
   case 'openarmy':armyTab='army';panel('army');break;
   case 'openlab':armyTab='lab';panel('army');break;
-  case 'build':if(shopPlot!=null){const sp=shopPlot;shopPlot=null;closePanel();doBuild(sp,v);}else{placing=v;closePanel();hint(L(`اضغط حلقة فارغة لبناء: ${B[v].n}`,`Tap an empty ring to build: ${B[v].n}`));}break;
+  case 'build':if(shopPlot!=null){const sp=shopPlot;shopPlot=null;closePanel();doBuild(sp,v);}else{placing=v;closePanel();hint(TX(`اضغط حلقة فارغة لبناء: ${B[v].n}`,`Tap an empty ring to build: ${B[v].n}`));}break;
   case 'tab':armyTab=v;renderPanel();break;
   case 'tr+':train(v);renderPanel();break;
   case 'tr-':untrain(v);renderPanel();break;
@@ -1303,39 +1303,39 @@ function act(a){const i=a.indexOf(':'),k=i<0?a:a.slice(0,i),v=i<0?'':a.slice(i+1
   case 'night':startNight();break;
   case 'retreat':closePanel();endSiege(true);break;
   case 'card':pickCard(+v);break;
-  case 'volley':if(G.phase!=='battle'){hint(L('المهارات تعمل في الليل','Abilities work at night'),1);break;}if(G.cd.volley>0)break;G.armed=G.armed==='volley'?null:'volley';if(G.armed)hint(L('اضغط على مكان الغزاة','Tap where the invaders are'),1);break;
-  case 'oil':{if(G.phase!=='battle'){hint(L('المهارات تعمل في الليل','Abilities work at night'),1);break;}if(G.cd.oil>0)break;G.cd.oil=G.oilCd;oilT=1.2;sfx('oil');const c=new THREE.Vector3(0,0,FZ+H+2.5);
+  case 'volley':if(G.phase!=='battle'){hint(TX('المهارات تعمل في الليل','Abilities work at night'),1);break;}if(G.cd.volley>0)break;G.armed=G.armed==='volley'?null:'volley';if(G.armed)hint(TX('اضغط على مكان الغزاة','Tap where the invaders are'),1);break;
+  case 'oil':{if(G.phase!=='battle'){hint(TX('المهارات تعمل في الليل','Abilities work at night'),1);break;}if(G.cd.oil>0)break;G.cd.oil=G.oilCd;oilT=1.2;sfx('oil');const c=new THREE.Vector3(0,0,FZ+H+2.5);
     foes.forEach(e=>{if(e.alive&&e.mesh.position.distanceTo(c)<7.5){e.burn={dps:2,t:3};hurtFoe(e,G.oilDmg,'fire');}});burst(c,0xff7a20,14);ringFx(c.x,c.z,7.5,0xff7a20,.8);break;}
-  case 'rage':if(G.phase!=='battle'||G.rage<100||G.raging)break;G.rage=0;G.raging=8;sfx('rage');cam.shake=.35;toast(L('غضب القائد: ضرر مضاعف وسهام نارية','Commander rage: double damage and fire arrows'));break;
+  case 'rage':if(G.phase!=='battle'||G.rage<100||G.raging)break;G.rage=0;G.raging=8;sfx('rage');cam.shake=.35;toast(TX('غضب القائد: ضرر مضاعف وسهام نارية','Commander rage: double damage and fire arrows'));break;
   case 'sel':selCard(v);break;
   case 'endraid':endRaid();break;
   case 'home':goHome();break;
-  case 'move':if(typeof sheetT!=='number')break;moving=sheetT;closeSheet();hint(L('اضغط موقعاً آخر لنقل المبنى إليه أو للتبديل معه','Tap another spot to move the building there or swap with it'));break;
+  case 'move':if(typeof sheetT!=='number')break;moving=sheetT;closeSheet();hint(TX('اضغط موقعاً آخر لنقل المبنى إليه أو للتبديل معه','Tap another spot to move the building there or swap with it'));break;
   case 'uphero':upgradeHero();renderPanel();break;
   case 'finhero':finishNow('hero');renderPanel();break;
   case 'upwall':upgradeWall();sheetHTML='';break;
-  case 'guide':{const g=GUIDE[S.guide];if(!g)break;if(g.v()){giveR(g.r);S.guide++;toast(L('أحسنت! حصلت على ','Well done! You got ')+rwTxt(g.r));sfx('unlock');save();}else toast(g.d);break;}
+  case 'guide':{const g=GUIDE[S.guide];if(!g)break;if(g.v()){giveR(g.r);S.guide++;toast(TX('أحسنت! حصلت على ','Well done! You got ')+rwTxt(g.r));sfx('unlock');save();}else toast(g.d);break;}
   case 'chest':claimChest();renderPanel();break;
   case 'dq':claimDQ(v);renderPanel();break;
   case 'tier':claimTier(+v);renderPanel();break;
   case 'ttab':taskTab=v;renderPanel();break;
   case 'revenge':revenge(+v);break;
-  case 'speed':S.slow=S.slow?0:1;save();renderPanel();toast(S.slow?L('المؤقتات الآن واقعية','Timers are now realistic'):L('المؤقتات الآن سريعة','Timers are now fast'));break;
-  case 'fs':try{const pr=stage.requestFullscreen&&stage.requestFullscreen();if(pr&&pr.catch)pr.catch(()=>toast(L('ملء الشاشة غير متاح هنا','Full screen is not available here')));else if(!pr)toast(L('ملء الشاشة غير متاح هنا','Full screen is not available here'));}catch(_){toast(L('ملء الشاشة غير متاح هنا','Full screen is not available here'));}break;
+  case 'speed':S.slow=S.slow?0:1;save();renderPanel();toast(S.slow?TX('المؤقتات الآن واقعية','Timers are now realistic'):TX('المؤقتات الآن سريعة','Timers are now fast'));break;
+  case 'fs':try{const pr=stage.requestFullscreen&&stage.requestFullscreen();if(pr&&pr.catch)pr.catch(()=>toast(TX('ملء الشاشة غير متاح هنا','Full screen is not available here')));else if(!pr)toast(TX('ملء الشاشة غير متاح هنا','Full screen is not available here'));}catch(_){toast(TX('ملء الشاشة غير متاح هنا','Full screen is not available here'));}break;
   case 'export':{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));const ta=$('#saveCode');if(ta){ta.value=code;ta.focus();ta.select();}
-    try{navigator.clipboard.writeText(code).then(()=>toast(L('نُسخ الرمز، احفظه في مكان آمن','Code copied, keep it somewhere safe')),()=>toast(L('الرمز محدد في المربع، انسخه يدوياً','The code is selected in the box, copy it manually')));}catch(_){toast(L('الرمز محدد في المربع، انسخه يدوياً','The code is selected in the box, copy it manually'));}break;}
+    try{navigator.clipboard.writeText(code).then(()=>toast(TX('نُسخ الرمز، احفظه في مكان آمن','Code copied, keep it somewhere safe')),()=>toast(TX('الرمز محدد في المربع، انسخه يدوياً','The code is selected in the box, copy it manually')));}catch(_){toast(TX('الرمز محدد في المربع، انسخه يدوياً','The code is selected in the box, copy it manually'));}break;}
   case 'lang':{try{localStorage.setItem('hisn-lang',EN?'ar':'en');}catch(_){}save();location.reload();break;}
   case 'report':{const camps=Object.keys(S.camps).sort((a,b)=>a-b).map(i=>(+i+1)+':'+S.camps[i].stars).join(' ');
     const rl=(S.rlog||[]).map(r=>[r.c==null?'x':r.c+1,r.st,r.p,r.hs,r.h,r.rg,r.sp,r.t,r.hl,r.hr,r.w].join(',')).join(';');
     const txt=`HISN-REPORT v4\nhall ${S.hall.l} · hero ${S.heroL} · weapon ${S.wIdx} · trophies ${S.trophies} · nights ${S.st.nights} · best ${S.best}\ntroops ${TORDER.map(t=>t+':'+(S.tl[t]||1)).join(' ')}\ncamps ${camps||'-'}\nraids(camp,stars,pct,housing,hero,rage,spells,sec,hall,heroLv,weapon) ${rl||'-'}`;
     const ta=$('#saveCode');if(ta){ta.value=txt;ta.focus();ta.select();}
-    try{navigator.clipboard.writeText(txt).then(()=>toast(L('نُسخ التقرير، أرسله لصاحب اللعبة','Report copied, send it to the game\'s owner')),()=>toast(L('التقرير في المربع، انسخه يدوياً','The report is in the box, copy it manually')));}catch(_){toast(L('التقرير في المربع، انسخه يدوياً','The report is in the box, copy it manually'));}break;}
-  case 'import':{const ta=$('#saveCode');try{const d=JSON.parse(decodeURIComponent(escape(atob(((ta&&ta.value)||'').trim()))));if(!d||d.v!==3||!Array.isArray(d.plots))throw 0;applySave(hydrate(d));toast(L('استُعيد تقدمك','Your progress was restored'));}catch(_){toast(L('الرمز غير صالح. الصق الرمز كاملاً','Invalid code. Paste the whole code'));}break;}
+    try{navigator.clipboard.writeText(txt).then(()=>toast(TX('نُسخ التقرير، أرسله لصاحب اللعبة','Report copied, send it to the game\'s owner')),()=>toast(TX('التقرير في المربع، انسخه يدوياً','The report is in the box, copy it manually')));}catch(_){toast(TX('التقرير في المربع، انسخه يدوياً','The report is in the box, copy it manually'));}break;}
+  case 'import':{const ta=$('#saveCode');try{const d=JSON.parse(decodeURIComponent(escape(atob(((ta&&ta.value)||'').trim()))));if(!d||d.v!==3||!Array.isArray(d.plots))throw 0;applySave(hydrate(d));toast(TX('استُعيد تقدمك','Your progress was restored'));}catch(_){toast(TX('الرمز غير صالح. الصق الرمز كاملاً','Invalid code. Paste the whole code'));}break;}
   case 'reset1':resetArmed=true;renderPanel();break;
   case 'reset0':resetArmed=false;renderPanel();break;
   case 'reset2':resetArmed=false;try{localStorage.removeItem(KEY);}catch(_){}applySave(fresh());panel('welcome');break;
   case 'welcome':S.seen=1;save();closePanel();if(offlineMsg)setTimeout(()=>toast(offlineMsg),300);break;
-  case 'mute':muted=!muted;if(master)master.gain.value=muted?0:.7;$('#bMute').textContent=muted?L('الصوت: مكتوم','Sound: muted'):L('الصوت: يعمل','Sound: on');$('#bMute').setAttribute('aria-pressed',String(muted));if(panelName==='settings')renderPanel();break;
+  case 'mute':muted=!muted;if(master)master.gain.value=muted?0:.7;$('#bMute').textContent=muted?TX('الصوت: مكتوم','Sound: muted'):TX('الصوت: يعمل','Sound: on');$('#bMute').setAttribute('aria-pressed',String(muted));if(panelName==='settings')renderPanel();break;
   }}
 stage.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&stage.contains(b)){if(!b.disabled)act(b.dataset.a);return;}
   if(e.target===overlay&&CLOSABLE.has(panelName))closePanel();});
@@ -1346,11 +1346,11 @@ function setRay(cx,cy){const r=cv.getBoundingClientRect();ndc.set((cx-r.left)/r.
 function groundAt(cx,cy){setRay(cx,cy);const h=ray.intersectObject(pickPlane)[0];return h?h.point.clone():null;}
 function villageTap(cx,cy){setRay(cx,cy);const hits=ray.intersectObjects([...PL.map(p=>p.pick),keepPick,...WALLS]);
   if(!hits.length){closeSheet();if(moving!==null){moving=null;hint('');}return;}const o=hits[0].object;
-  if(moving!==null){const from=moving;moving=null;hint('');const to=o.userData.i;if(to===undefined||to===from)return;const sw=S.plots[to];S.plots[to]=S.plots[from];S.plots[from]=sw;rebuildPlot(from);rebuildPlot(to);save();sfx('build');toast(sw?L('تم تبديل المكانين','The two spots were swapped'):L('تم النقل','Moved'));return;}
-  if(o===keepPick){if(placing){toast(L('اختر حلقة فارغة','Pick an empty ring'));return;}openSheet('hall');sfx('tap');return;}
-  if(WALLS.includes(o)){if(placing){toast(L('اختر حلقة فارغة','Pick an empty ring'));return;}openSheet('wall');sfx('tap');return;}
+  if(moving!==null){const from=moving;moving=null;hint('');const to=o.userData.i;if(to===undefined||to===from)return;const sw=S.plots[to];S.plots[to]=S.plots[from];S.plots[from]=sw;rebuildPlot(from);rebuildPlot(to);save();sfx('build');toast(sw?TX('تم تبديل المكانين','The two spots were swapped'):TX('تم النقل','Moved'));return;}
+  if(o===keepPick){if(placing){toast(TX('اختر حلقة فارغة','Pick an empty ring'));return;}openSheet('hall');sfx('tap');return;}
+  if(WALLS.includes(o)){if(placing){toast(TX('اختر حلقة فارغة','Pick an empty ring'));return;}openSheet('wall');sfx('tap');return;}
   const i=o.userData.i,p=S.plots[i];
-  if(placing){if(p){toast(L('هذا الموقع مشغول، اختر حلقة فارغة','This spot is taken, pick an empty ring'));return;}const t=placing;placing=null;hint('');doBuild(i,t);return;}
+  if(placing){if(p){toast(TX('هذا الموقع مشغول، اختر حلقة فارغة','This spot is taken, pick an empty ring'));return;}const t=placing;placing=null;hint('');doBuild(i,t);return;}
   if(!p){shopPlot=i;panel('shop');return;}
   if(B[p.t].kind==='prod'&&p.l>0&&!p.end&&p.stored>=1)collect(i);
   openSheet(i);sfx('tap');}
@@ -1394,18 +1394,18 @@ const E={};['rGold','rDates','rPearl','capG','capD','cBuild','cLeague','cArmy','
 function hud(){
   if(mode==='village'){const cg=cap('gold'),cd=cap('dates');setTxt('g',E.rGold,N(S.gold));setTxt('d',E.rDates,N(S.dates));setTxt('p',E.rPearl,N(S.pearl));
     E.capG.style.width=Math.min(100,S.gold/cg*100)+'%';E.capD.style.width=Math.min(100,S.dates/cd*100)+'%';
-    setTxt('b',E.cBuild,L(`البنّاؤون ${N(freeB())} من ${N(S.builders)}`,`Builders ${N(freeB())} of ${N(S.builders)}`));setTxt('l',E.cLeague,L(`${league()} · ${N(S.trophies)} كأس`,`${league()} · ${N(S.trophies)} trophies`));setTxt('a',E.cArmy,L(`الجيش ${N(armyHs())} من ${N(armyCap())}${S.queue.length?L(' · يتدرّب ',' · training ')+N(S.queue.length):''}`,`Army ${N(armyHs())} of ${N(armyCap())}${S.queue.length?L(' · يتدرّب ',' · training ')+N(S.queue.length):''}`));
+    setTxt('b',E.cBuild,TX(`البنّاؤون ${N(freeB())} من ${N(S.builders)}`,`Builders ${N(freeB())} of ${N(S.builders)}`));setTxt('l',E.cLeague,TX(`${league()} · ${N(S.trophies)} كأس`,`${league()} · ${N(S.trophies)} trophies`));setTxt('a',E.cArmy,TX(`الجيش ${N(armyHs())} من ${N(armyCap())}${S.queue.length?TX(' · يتدرّب ',' · training ')+N(S.queue.length):''}`,`Army ${N(armyHs())} of ${N(armyCap())}${S.queue.length?TX(' · يتدرّب ',' · training ')+N(S.queue.length):''}`));
     ensureDay();ensureSeason();const ready=TASKS.filter(t=>!S.tasks[t.id]&&t.v()>=t.goal).length+DQ.filter(q=>!S.dq.claimed[q.id]&&dqv(q)>=q.goal).length+(chestReady()?1:0)+SEASON.filter((t,i)=>!S.season.claimed[i]&&S.season.pts>=t.p).length;E.taskBadge.hidden=!ready;setTxt('tb',E.taskBadge,N(ready));
-    const now2=Date.now(),sh=S.shield>now2;setTxt('lg',E.cLog,(S.logNew?'● ':'')+(sh?L('درع ','Shield ')+fmtT((S.shield-now2)/1000):L('سجل الدفاع','Defense log')));
-    if(S.guide<GUIDE.length&&sheetT===null&&!placing&&moving===null){const g=GUIDE[S.guide],ok=g.v();const h=ok?L(`<b>اكتمل الهدف:</b> ${g.n}. اضغط لاستلام ${rwTxt(g.r)}`,`<b>Goal done:</b> ${g.n}. Tap to claim ${rwTxt(g.r)}`):L(`الهدف ${N(S.guide+1)} من ${N(GUIDE.length)}: <b>${g.n}</b>`,`Goal ${N(S.guide+1)} of ${N(GUIDE.length)}: <b>${g.n}</b>`);
+    const now2=Date.now(),sh=S.shield>now2;setTxt('lg',E.cLog,(S.logNew?'● ':'')+(sh?TX('درع ','Shield ')+fmtT((S.shield-now2)/1000):TX('سجل الدفاع','Defense log')));
+    if(S.guide<GUIDE.length&&sheetT===null&&!placing&&moving===null){const g=GUIDE[S.guide],ok=g.v();const h=ok?TX(`<b>اكتمل الهدف:</b> ${g.n}. اضغط لاستلام ${rwTxt(g.r)}`,`<b>Goal done:</b> ${g.n}. Tap to claim ${rwTxt(g.r)}`):TX(`الهدف ${N(S.guide+1)} من ${N(GUIDE.length)}: <b>${g.n}</b>`,`Goal ${N(S.guide+1)} of ${N(GUIDE.length)}: <b>${g.n}</b>`);
       if(shown.gd!==h){shown.gd=h;E.guide.innerHTML=h;}E.guide.hidden=false;E.guide.classList.toggle('ok',ok);}else E.guide.hidden=true;}
   else if(mode==='siege'){const g=Math.max(0,G.gate/G.gateMax);E.gateBar.style.width=g*100+'%';E.gateBar.style.background=g>.5?'var(--good)':g>.25?'var(--gold)':'var(--bad)';
-    setTxt('gt',E.gateTxt,N(Math.ceil(G.gate)));setTxt('nt',E.nightTxt,L(`الليلة ${N(G.night)} · أفضل رقم ${N(S.best)}`,`Night ${N(G.night)} · best ${N(S.best)}`));setTxt('kt',E.killTxt,N(G.kills));setTxt('sl',E.sLoot,L(`${N(G.loot.gold)} ذهب · ${N(G.loot.dates)} تمر`,`${N(G.loot.gold)} gold · ${N(G.loot.dates)} dates`));setTxt('wp',E.wpnTxt,weapon().n);
+    setTxt('gt',E.gateTxt,N(Math.ceil(G.gate)));setTxt('nt',E.nightTxt,TX(`الليلة ${N(G.night)} · أفضل رقم ${N(S.best)}`,`Night ${N(G.night)} · best ${N(S.best)}`));setTxt('kt',E.killTxt,N(G.kills));setTxt('sl',E.sLoot,TX(`${N(G.loot.gold)} ذهب · ${N(G.loot.dates)} تمر`,`${N(G.loot.gold)} gold · ${N(G.loot.dates)} dates`));setTxt('wp',E.wpnTxt,weapon().n);
     E.bVolley.style.setProperty('--cd',(G.cd.volley/10*100)+'%');E.bOil.style.setProperty('--cd',(G.cd.oil/G.oilCd*100)+'%');E.bVolley.classList.toggle('armed',G.armed==='volley');
-    E.bRage.style.setProperty('--fill',(G.raging>0?G.raging/8*100:G.rage)+'%');E.bRage.classList.toggle('ready',G.rage>=100&&!G.raging);setTxt('rg',E.rageTxt,G.raging>0?L('نشط','Active'):G.rage>=100?L('جاهز','Ready'):N(G.rage)+L('٪','%'));
-    E.bNight.hidden=G.phase!=='ready';setTxt('bn',E.bNight,L(`ابدأ الليلة ${N(G.night)}`,`Start night ${N(G.night)}`));E.bRetreat.hidden=G.phase!=='ready';setTxt('br',E.bRetreat,G.survived?L('انسحب بكل الغنائم','Retreat with all the loot'):L('العودة إلى الحصن','Back to the fort'));}
-  else if(mode==='raid'&&R){setTxt('rn',E.rName,R.spec.name);setTxt('rt',E.rTime,R.phase==='scout'?L('استطلاع ','Scouting ')+fmtT(R.scout):L('الوقت ','Time ')+fmtT(R.time));setTxt('rp',E.rPct,N(R.destroyed/R.total*100)+L('٪','%'));
-    const st=raidStars();if(shown.rs!==st){shown.rs=st;E.rStars.innerHTML=starsHTML(st);}setTxt('rl',E.rLoot,L(`${N(R.loot.gold)} ذهب · ${N(R.loot.dates)} تمر`,`${N(R.loot.gold)} gold · ${N(R.loot.dates)} dates`));renderCards();}}
+    E.bRage.style.setProperty('--fill',(G.raging>0?G.raging/8*100:G.rage)+'%');E.bRage.classList.toggle('ready',G.rage>=100&&!G.raging);setTxt('rg',E.rageTxt,G.raging>0?TX('نشط','Active'):G.rage>=100?TX('جاهز','Ready'):N(G.rage)+TX('٪','%'));
+    E.bNight.hidden=G.phase!=='ready';setTxt('bn',E.bNight,TX(`ابدأ الليلة ${N(G.night)}`,`Start night ${N(G.night)}`));E.bRetreat.hidden=G.phase!=='ready';setTxt('br',E.bRetreat,G.survived?TX('انسحب بكل الغنائم','Retreat with all the loot'):TX('العودة إلى الحصن','Back to the fort'));}
+  else if(mode==='raid'&&R){setTxt('rn',E.rName,R.spec.name);setTxt('rt',E.rTime,R.phase==='scout'?TX('استطلاع ','Scouting ')+fmtT(R.scout):TX('الوقت ','Time ')+fmtT(R.time));setTxt('rp',E.rPct,N(R.destroyed/R.total*100)+TX('٪','%'));
+    const st=raidStars();if(shown.rs!==st){shown.rs=st;E.rStars.innerHTML=starsHTML(st);}setTxt('rl',E.rLoot,TX(`${N(R.loot.gold)} ذهب · ${N(R.loot.dates)} تمر`,`${N(R.loot.gold)} gold · ${N(R.loot.dates)} dates`));renderCards();}}
 
 /* =================== loop =================== */
 let last=performance.now(),slow=0,saveT=0,night=0;
@@ -1434,11 +1434,11 @@ rebuildKeep();for(let i=0;i<NPL;i++)rebuildPlot(i);applyWallLook();applyCos();
 let offlineMsg='';
 (function(){const before={gold:0,dates:0};S.plots.forEach(p=>{if(p&&B[p.t].kind==='prod')before[B[p.t].prod]+=p.stored||0;});const away=(Date.now()-(S.lastSeen||Date.now()))/1000;
   tickEco(Date.now());const after={gold:0,dates:0};S.plots.forEach(p=>{if(p&&B[p.t].kind==='prod')after[B[p.t].prod]+=p.stored||0;});
-  const dg=after.gold-before.gold,dd=after.dates-before.dates;if(away>60&&(dg>1||dd>1))offlineMsg=L(`أثناء غيابك تراكم ${N(dg)} ذهب و${N(dd)} تمر. اضغط المناجم والمزارع لجمعها`,`While you were away ${N(dg)} gold and ${N(dd)} dates piled up. Tap mines and farms to collect`);})();
-const attacks=simulateAway();if(attacks)offlineMsg=L(`تعرّض حصنك لـ${N(attacks)} ${attacks>1?L('غارات','raids'):L('غارة','raid')} أثناء غيابك. افتح سجل الدفاع`,`Your fort took ${N(attacks)} ${attacks>1?L('غارات','raids'):L('غارة','raid')} while you were away. Open the defense log`);ensureDay();ensureSeason();save();
+  const dg=after.gold-before.gold,dd=after.dates-before.dates;if(away>60&&(dg>1||dd>1))offlineMsg=TX(`أثناء غيابك تراكم ${N(dg)} ذهب و${N(dd)} تمر. اضغط المناجم والمزارع لجمعها`,`While you were away ${N(dg)} gold and ${N(dd)} dates piled up. Tap mines and farms to collect`);})();
+const attacks=simulateAway();if(attacks)offlineMsg=TX(`تعرّض حصنك لـ${N(attacks)} ${attacks>1?TX('غارات','raids'):TX('غارة','raid')} أثناء غيابك. افتح سجل الدفاع`,`Your fort took ${N(attacks)} ${attacks>1?TX('غارات','raids'):TX('غارة','raid')} while you were away. Open the defense log`);ensureDay();ensureSeason();save();
 setHud();
 if(!S.seen)panel('welcome');else if(offlineMsg)toast(offlineMsg);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{const n=simulateAway();if(n)toast(L(`تعرّض حصنك لـ${N(n)} ${n>1?L('غارات','raids'):L('غارة','raid')} أثناء غيابك. افتح سجل الدفاع`,`Your fort took ${N(n)} ${n>1?L('غارات','raids'):L('غارة','raid')} while you were away. Open the defense log`));save();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{const n=simulateAway();if(n)toast(TX(`تعرّض حصنك لـ${N(n)} ${n>1?TX('غارات','raids'):TX('غارة','raid')} أثناء غيابك. افتح سجل الدفاع`,`Your fort took ${N(n)} ${n>1?TX('غارات','raids'):TX('غارة','raid')} while you were away. Open the defense log`));save();}});
 window.__h={simulateAway,get S(){return S;},act,deployAt,startCamp,get R(){return R;},G,get mode(){return mode;},villageTap,collect,doBuild,startSiege,siegeTap};
 requestAnimationFrame(frame);
 })();
